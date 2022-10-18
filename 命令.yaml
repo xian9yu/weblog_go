@@ -1,0 +1,4 @@
+
+打包: docker build -t weblog .
+
+运行: docker run -d --name weblog -p 8090:8090  weblog
