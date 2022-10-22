@@ -41,7 +41,7 @@ func Add(c *gin.Context) {
 	article := &models.Article{
 		Title:       title,
 		Content:     content,
-		AuthorId:    uint64(utils.AnyToInt(userId)),
+		UserId:      uint64(utils.AnyToInt(userId)),
 		AllowView:   allowView, // y 显示 | n 不显示
 		CreatedTime: nowTime,
 		UpdatedTime: nowTime,

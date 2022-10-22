@@ -9,10 +9,20 @@ type Article struct {
 	Id          uint64 `json:"id" gorm:"not null;primaryKey;unique;comment:文章id"`
 	Title       string `json:"title" gorm:"not null;unique;comment:文章标题"`
 	Content     string `json:"content" gorm:"not null;comment:文章内容"`
-	AuthorId    uint64 `json:"author_id" gorm:"not null;comment:作者"`
+	UserId      uint64 `json:"user_id" gorm:"not null;comment:用户id"`
 	AllowView   string `json:"allow_view" gorm:"not null;comment:是否可以查看 n隐藏 y显示"`
 	CreatedTime uint64 `json:"created_time" gorm:"not null;comment:创建时间"`
 	UpdatedTime uint64 `json:"updated_time" gorm:"not null;comment:编辑时间"`
+}
+
+type articleListResp struct {
+	Id          uint64 `json:"id"`
+	Name        string `json:"name"` // 用户名, 结构体参数定义必须和 model.user 的 Name 一样
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	UserId      uint64 `json:"user_id"`
+	CreatedTime uint64 `json:"created_time"`
+	UpdatedTime uint64 `json:"updated_time"`
 }
 
 func (article Article) Add() (uint64, int64, error) {
@@ -47,7 +57,7 @@ func (Article) GetCategoryList(articleIds []int, orderBy string, page utils.Pagi
 }
 
 // 全列表
-func (Article) GetList(orderBy string, page utils.Pagination) (total int64, article []Article, err error) {
+func (Article) GetList(orderBy string, page utils.Pagination) (total int64, ar []articleListResp, err error) {
 	var (
 		size   = page.LimitSize
 		offset = page.Offset()
@@ -58,9 +68,9 @@ func (Article) GetList(orderBy string, page utils.Pagination) (total int64, arti
 	}
 
 	db.Model(&Article{}).Where("allow_view = ?", "y").Count(&total)
-	err = db.Where(Article{}).Where("allow_view = ?", "y").Limit(size).Offset(offset).Order(orderBy).Find(&article).Error
+	err = db.Model(&Article{}).Select("user.name, article.id, article.user_id, article.title, article.content, article.created_time, article.updated_time").Joins("left join user ON user.id = article.user_id").Where("allow_view = ?", "y").Limit(size).Offset(offset).Order(orderBy).Scan(&ar).Error
 
-	return total, article, err
+	return total, ar, err
 }
 
 // CountArticleByAny 获取有状态的count
