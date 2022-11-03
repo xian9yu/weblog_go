@@ -1,0 +1,1046 @@
+{
+	"info": {
+		"_postman_id": "02065f12-c111-4baa-a39a-2ab88adf59ac",
+		"name": "weblog_go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13635964"
+	},
+	"item": [
+		{
+			"name": "/article/details/id/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{welog_go}}/article/details/id/1",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"details",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/details/title/:title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{welog_go}}/article/details/title/尼玛",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"details",
+						"title",
+						"尼玛"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/category_list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{welog_go}}/article/category_list?category_id=[2]&page_no=1&limit_size=10&order_by=created_time DESC",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"category_list"
+					],
+					"query": [
+						{
+							"key": "category_id",
+							"value": "[2]",
+							"description": "\n"
+						},
+						{
+							"key": "page_no",
+							"value": "1"
+						},
+						{
+							"key": "limit_size",
+							"value": "10"
+						},
+						{
+							"key": "order_by",
+							"value": "created_time DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{welog_go}}/article/list?page_no=1&limit_size=10&order_by=created_time DESC",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"list"
+					],
+					"query": [
+						{
+							"key": "page_no",
+							"value": "1"
+						},
+						{
+							"key": "limit_size",
+							"value": "10"
+						},
+						{
+							"key": "order_by",
+							"value": "created_time DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "抽烟",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "好大一股烟味儿, 不知道哪个傻逼在抽烟",
+							"type": "text"
+						},
+						{
+							"key": "allow_view",
+							"value": "y",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "[1,2,3]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/article/add",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/edit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "尼玛",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩从",
+							"type": "text"
+						},
+						{
+							"key": "allow_view",
+							"value": "y",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "[1,2]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/article/edit",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/article/delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/article/delete",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"article",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "测试",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "category",
+							"type": "text"
+						},
+						{
+							"key": "remark",
+							"value": "测试分类",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/category/add",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/edit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "关于我们",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "关于我们",
+							"type": "text"
+						},
+						{
+							"key": "remark",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/category/edit",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/category/delete",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/category/list",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/details/id/:id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/category/details/id/1",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"details",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/category/details/id/name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/category/details/name/关于我们",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"category",
+						"details",
+						"name",
+						"关于我们"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/sign_up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account",
+							"value": "admin"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						},
+						{
+							"key": "mail",
+							"value": "admin@mail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/sign_up",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"sign_up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/sign_in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account",
+							"value": "admin"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/sign_in",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"sign_in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/sign_out",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/sign_out",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"sign_out"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/edit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						},
+						{
+							"key": "mail",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/edit",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/delete",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/user/list?group=&page_no=1&limit_size=10&order_by=created_time ASC",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"list"
+					],
+					"query": [
+						{
+							"key": "group",
+							"value": ""
+						},
+						{
+							"key": "page_no",
+							"value": "1"
+						},
+						{
+							"key": "limit_size",
+							"value": "10"
+						},
+						{
+							"key": "order_by",
+							"value": "created_time ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/details/id/:id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/user/details/id/1",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"details",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/details/name/:name",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/details/account/admin",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"details",
+						"account",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/details/mail/:mail",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{welog_go}}/user/details/mail/admin@mail.com",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"user",
+						"details",
+						"mail",
+						"admin@mail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "test"
+						},
+						{
+							"key": "value",
+							"value": "y"
+						},
+						{
+							"key": "remark",
+							"value": "测试",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/setting/add",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/edit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "value",
+							"value": "N",
+							"type": "text"
+						},
+						{
+							"key": "remark",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/setting/edit",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/setting/delete",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/setting/list",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/details/id/:id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/setting/details/id/1",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"details",
+						"id",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/setting/details/name/:name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{welog_go}}/setting/details/name/allow_signup",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"setting",
+						"details",
+						"name",
+						"allow_signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/upload/image",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/D:/xl.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/upload/image",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"upload",
+						"image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/upload/delete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{welog_go}}/upload/delete",
+					"host": [
+						"{{welog_go}}"
+					],
+					"path": [
+						"upload",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
