@@ -10,13 +10,14 @@ import (
 
 // 查询分类中的文章
 func CategoryList(c *gin.Context) {
-	categoryId := c.Query("category_id")               // 分类id
-	pageNo := utils.AnyToInt(c.Query("page_no"))       // 页码
-	limitSize := utils.AnyToInt(c.Query("limit_size")) // 每页显示数量
-	orderBy := c.Query("order_by")                     // order by (id DESC)
+	categoryId := c.Query("category_id")              // 分类id
+	pageNo := utils.AnyToInt(c.Query("page_no"))      // 页码
+	pageSize := utils.AnyToInt(c.Query("limit_size")) // 每页显示数量
+	orderBy := c.Query("order_by")                    // order by (id DESC)
 
-	if limitSize <= 0 {
-		limitSize = 10 // 每页显示数量默认为10
+	// 用户未输入页码, 则默认为 1
+	if pageNo == 0 {
+		pageNo = 1
 	}
 
 	// string 转 []string
@@ -46,8 +47,8 @@ func CategoryList(c *gin.Context) {
 	// 通过 article id 查询文章列表
 	var article models.Article
 	total, list, err := article.GetCategoryList(articleIds, orderBy, utils.Pagination{
-		PageNo:    pageNo,
-		LimitSize: limitSize,
+		PageNo:   pageNo,
+		PageSize: utils.Pagination{}.DefaultPageSize(pageSize), // 判断每页数量是否为空, 为空则给默认值
 	})
 	if err != nil {
 		response.Error(c, "获取列表失败", err)
@@ -64,19 +65,20 @@ func CategoryList(c *gin.Context) {
 
 // 文章列表
 func List(c *gin.Context) {
-	pageNo := utils.AnyToInt(c.Query("page_no"))       // 页码
-	limitSize := utils.AnyToInt(c.Query("limit_size")) // 每页显示数量
-	orderBy := c.Query("order_by")                     // order by (id DESC)
+	pageNo := utils.AnyToInt(c.Query("page_no"))      // 页码
+	pageSize := utils.AnyToInt(c.Query("limit_size")) // 每页显示数量
+	orderBy := c.Query("order_by")                    // order by (id DESC)
 
-	if limitSize == 0 {
-		limitSize = 10 // 每页显示数量默认为10
+	// 用户未输入页码, 则默认为 1
+	if pageNo == 0 {
+		pageNo = 1
 	}
 
 	// 通过 article id 查询文章列表
 	var article models.Article
 	total, list, err := article.GetList(orderBy, utils.Pagination{
-		PageNo:    pageNo,
-		LimitSize: limitSize,
+		PageNo:   pageNo,
+		PageSize: utils.Pagination{}.DefaultPageSize(pageSize), // 判断每页数量是否为空, 为空则给默认值
 	})
 	if err != nil {
 		response.Error(c, "获取列表失败", err)

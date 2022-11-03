@@ -40,9 +40,9 @@ func (Article) Delete(id uint64) int64 {
 }
 
 // 分类列表
-func (Article) GetCategoryList(articleIds []int, orderBy string, page utils.Pagination) (total int64, article []Article, err error) {
+func (Article) GetCategoryList(articleIds []int, orderBy string, page utils.Pagination) (total int64, ar []articleListResp, err error) {
 	var (
-		size   = page.LimitSize
+		size   = page.PageSize
 		offset = page.Offset()
 	)
 
@@ -51,15 +51,15 @@ func (Article) GetCategoryList(articleIds []int, orderBy string, page utils.Pagi
 	}
 
 	db.Model(&Article{}).Where("allow_view = ? and id in ?", "y", articleIds).Count(&total)
-	err = db.Where(Article{}).Where("allow_view = ? and id in ?", "y", articleIds).Limit(size).Offset(offset).Order(orderBy).Find(&article).Error
+	err = db.Model(&Article{}).Select("user.name, article.id, article.user_id, article.title, article.content, article.created_time, article.updated_time").Joins("left join user ON user.id = article.user_id").Where("allow_view = ? and id in ?", "y", articleIds).Limit(size).Offset(offset).Order(orderBy).Find(&ar).Error
 
-	return total, article, err
+	return total, ar, err
 }
 
 // 全列表
 func (Article) GetList(orderBy string, page utils.Pagination) (total int64, ar []articleListResp, err error) {
 	var (
-		size   = page.LimitSize
+		size   = page.PageSize
 		offset = page.Offset()
 	)
 

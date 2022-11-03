@@ -56,7 +56,7 @@ func GetUserDetailsByAny[T getDetailsGenerics](key string, value T) (user User, 
 // 查列表
 func (User) GetList(group, orderBy string, page utils.Pagination) (total int64, user []User, err error) {
 	var (
-		size   = page.LimitSize
+		size   = page.PageSize
 		offset = page.Offset()
 	)
 
