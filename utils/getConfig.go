@@ -26,8 +26,12 @@ func getWdPath() string {
 	return dir
 }
 
+func Config() *viper.Viper {
+	return initConfig()
+}
+
 // InitConfig 初始化配置文件
-func InitConfig() *viper.Viper {
+func initConfig() *viper.Viper {
 	vip := viper.New()
 	vip.SetConfigFile("./config.yaml")
 	vip.AddConfigPath(getExecPath())
