@@ -1,22 +1,18 @@
-package models
+package dbConn
 
-//
-//var (
-//	conn *redis.Client
-//	Ctx  = context.Background()
-//)
+//var ctx = context.TODO()
 //
 //func Redis() *redis.Client {
-//	return conn
+//	return initRedis()
 //}
 //
-//func InitRedis() *redis.Client {
+//func initRedis() *redis.Client {
 //	addr := v.GetString("db.redis.addr")
 //	pwd := v.GetString("db.redis.pwd")
 //	dbn := v.GetInt("db.redis.db")
 //	poolSize := v.GetInt("db.redis.poolSize")
 //
-//	conn = redis.NewClient(&redis.Options{
+//	client := redis.NewClient(&redis.Options{
 //		Addr:     addr,     // host:port
 //		Password: pwd,      // set password
 //		DB:       dbn,      // use default DB
@@ -24,9 +20,9 @@ package models
 //	})
 //
 //	//检测心跳
-//	_, err := conn.Ping(Ctx).Result()
+//	_, err := client.Ping(ctx).Result()
 //	if err != nil {
 //		log.Fatalln("redis connection failed:", err)
 //	}
-//	return conn
+//	return client
 //}

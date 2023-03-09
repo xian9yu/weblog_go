@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"weblog/dbConn"
 	"weblog/middleware"
-	"weblog/models"
 	"weblog/router"
 	"weblog/utils"
 )
@@ -21,7 +21,7 @@ func initRouter(r *gin.Engine) {
 func main() {
 	v := utils.InitConfig() // 初始化 配置文件
 
-	models.InitSQL() // 初始化 sql
+	dbConn.MySQL() // 初始化 sql
 	//models.InitRedis() // 初始化 redis
 
 	r := gin.Default() // 初始化router
