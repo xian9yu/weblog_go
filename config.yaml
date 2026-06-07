@@ -1,10 +1,8 @@
 app: # 服务监听 host,port
-  addr: 0.0.0.0
-  port: 1234
+  address: 127.0.0.1:1234
 
 db:
-  mysql: # 数据库
-    dsn: weblog:RyZcnzA4Axj8PWjM@tcp(127.0.0.1:3306)/weblog?charset=utf8
+  mysql: weblog:RyZcnzA4Axj8PWjM@tcp(127.0.0.1:3306)/weblog?charset=utf8
 
 #  redis: # 缓存
 #    addr: localhost:6379
