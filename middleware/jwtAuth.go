@@ -15,7 +15,7 @@ func JWTAuth() gin.HandlerFunc {
 		// 1. 从请求头（Header）中获取 token
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			response.FailAuth(c, "请求未携带Token，请先登录")
+			response.FailUnauthorized(c, "请求未携带Token，请先登录")
 			c.Abort() // 必须 Abort，阻止执行后面的业务 Controller
 			return
 		}
@@ -23,7 +23,7 @@ func JWTAuth() gin.HandlerFunc {
 		// 检查 Token 格式是否为标准的 "Bearer <token>"
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			response.FailAuth(c, "Token格式错误")
+			response.FailUnauthorized(c, "Token格式错误")
 			c.Abort()
 			return
 		}
@@ -31,7 +31,7 @@ func JWTAuth() gin.HandlerFunc {
 		// 解析并验证 Token 的合法性与有效性
 		claims, err := utils.ParseToken(parts[1])
 		if err != nil {
-			response.FailAuth(c, "登录令牌无效或已过期，请重新登录")
+			response.FailUnauthorized(c, "登录令牌无效或已过期，请重新登录")
 			c.Abort()
 			return
 		}

@@ -1,33 +1,43 @@
 package article
 
 import (
-	"github.com/gin-gonic/gin"
-	"weblog/models"
-	"weblog/utils"
+	"weblog/dto"
 	"weblog/utils/response"
+
+	"github.com/gin-gonic/gin"
 )
 
-func Delete(c *gin.Context) {
-	id := c.PostForm("id")
-
+func (ac *Controller) Delete(c *gin.Context) {
+	var input dto.ArticleUpdateInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.FailClient(c, "参数解析失败: %v", err)
+		return
+	}
 	// 获取 token 详情
-	userId, _ := c.Get("user_id")
+	currentUserId, _ := c.Get("user_id")
 	group, _ := c.Get("group")
-	// 只有 (本人/管理员) 才能操作
-	if uint64(utils.AnyToInt(id)) == uint64(utils.AnyToInt(userId)) || group == "admin" {
-		var article models.Article
-		rowsAffected := article.Delete(uint64(utils.AnyToInt(id)))
-		if rowsAffected == 1 {
-			response.Success(c, gin.H{
-				"message": "删除成功",
-			})
-			c.Abort()
+
+	// 判断 如果不是超级管理员，就必须进行严苛的“作者本人”所有权校验
+	if group != "admin" {
+		// 获取 article 的数据
+		article, err := ac.articleRepo.GetArticleDetailsById(input.ID)
+		if err != nil || article == nil {
+			response.FailClient(c, "删除失败，目标文章不存在")
 			return
 		}
-		response.Error(c, "删除失败, 请稍后再试", nil)
-		c.Abort()
+
+		// 检查这篇文章的作者 ID，和当前登录的用户 UserId 是否一致
+		if article.UserId != currentUserId {
+			response.FailForbidden(c, "对不起，您没有权限删除他人的文章")
+			return
+		}
+	}
+
+	rowsAffected := ac.articleRepo.Delete(input.ID)
+	if rowsAffected != 1 {
+		response.FailClient(c, "服务器繁忙，文章删除失败，请稍后再试")
 		return
 	}
 
-	response.PageNotFound(c)
+	response.OkMsg(c, "文章删除成功")
 }

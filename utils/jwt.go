@@ -18,7 +18,7 @@ type MyClaims struct {
 
 // GenerateToken 签发 JWT Token（支持自定义过期时间）
 func GenerateToken(userId, userName, userEmail, userGroup string, expireDuration time.Duration) (string, error) {
-	// 1. 创建我们自己的明文数据
+	// 创建明文数据
 	claims := MyClaims{
 		UserId:    userId,
 		UserName:  userName,
@@ -30,11 +30,10 @@ func GenerateToken(userId, userName, userEmail, userGroup string, expireDuration
 		},
 	}
 
-	// 2. 使用指定的加密算法（常用 HS256）创建 token 对象
+	// 用指定的加密算法（常用 HS256）创建 token 对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// 3. 使用配置文件里的安全密钥进行签名，生成最终的字符串 Token
-	// 完美联动你之前写好的 GetConfig()，移入函数体内防止启动 panic
+	// 使用配置文件里的安全密钥进行签名，生成最终的字符串 Token
 	secretKey := []byte(GetConfig().SecurityKey.Token)
 	return token.SignedString(secretKey)
 }

@@ -1,15 +1,32 @@
 package models
 
 import (
-	"weblog/dbConn"
-	"weblog/utils"
+	"gorm.io/gorm"
 )
 
-var (
-	db = dbConn.MySQL() // 初始化 mysql
-	v  = utils.Config() // 初始化配置读取
-)
+type Repositories struct {
+	Article      *ArticleRepository
+	Auth         *AuthRepository
+	User         *UserRepository
+	SystemConfig *SystemConfigRepository
+}
 
-type getDetailsGenerics interface {
-	int | string
+// NewRepositories 一次性把所有 Repo 初始化好
+func NewRepositories(db *gorm.DB) *Repositories {
+	return &Repositories{
+		Article:      NewArticleRepository(db),
+		Auth:         NewAuthRepository(db),
+		User:         NewUserRepository(db),
+		SystemConfig: NewSystemConfigRepository(db),
+	}
+}
+
+// WithTx 集体切换到事务状态
+func (repos *Repositories) WithTx(tx *gorm.DB) *Repositories {
+	return &Repositories{
+		Article:      repos.Article.WithTx(tx),
+		Auth:         repos.Auth.WithTx(tx),
+		SystemConfig: repos.SystemConfig.WithTx(tx),
+		User:         repos.User.WithTx(tx),
+	}
 }
