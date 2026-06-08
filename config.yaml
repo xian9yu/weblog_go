@@ -1,20 +1,16 @@
 app: # 服务监听 host,port
   address: 127.0.0.1:1234
 
-db:
+database: # 数据库
   mysql: weblog:RyZcnzA4Axj8PWjM@tcp(127.0.0.1:3306)/weblog?charset=utf8
 
 #  redis: # 缓存
 #    addr: localhost:6379
 #    pwd:
-#    db: 0
+#    database: 0
 #    poolSize: 100
 
 # md5 加密salt
 securityKey:
   token: tokenMd5SecureKey
   password: passwordMd5SecureKey
-
-upload:
-  image:
-    path: ./image

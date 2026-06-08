@@ -3,29 +3,44 @@ package main
 import (
 	"log"
 	"time"
-
+	"weblog/ctrls"
+	"weblog/database"
 	"weblog/models"
 	"weblog/router"
 	"weblog/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func initRouter(r *gin.Engine) {
-	router.User(r)
-	router.Article(r)
-	router.Category(r)
-	router.Setting(r)
+func initRouter(db *gorm.DB, r *gin.Engine) {
+	// 初始化 Repository (数据层)，把 database 注入进去
+	repos := models.NewRepositories(db)
+	// 初始化 Controller (控制层)，把 repo 注入进去
+	ct := ctrls.NewControllers(repos)
+	api := r.Group("/api/v1")
+	{
+		router.Article(db, ct.Article, api)
+		// 以后加功能只需要在这继续追加：
+		// api.POST("/articles", articleCtrl.Create)
+		// api.POST("/comments", commentCtrl.Create)
+	}
+
 }
 
-func initApp(r *gin.Engine) string {
-	v := utils.Config() // 配置文件
+func initApp() (*gin.Engine, string) {
+	// 启动时一次性加载配置
+	conf, err := utils.InitConfig("config.yaml")
+	if err != nil {
+		log.Fatalf("❌ 项目启动失败, 配置加载异常: %v\n", err)
+	}
+	r := gin.Default() // 初始化router
 
-	models.MySQL() // sql
-	// models.InitRedis() // redis
-
-	initRouter(r)
+	// 初始化核心组件
+	db := database.InitMySQL(conf.Database.Mysql)
+	// 载入路由系统，并把 database 注入进去
+	initRouter(db, r)
 
 	// 限制上传文件大小
 	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
@@ -49,13 +64,12 @@ func initApp(r *gin.Engine) string {
 	// 模式为 release
 	gin.SetMode(gin.ReleaseMode)
 
-	return v.GetString("app.address")
+	return r, conf.App.Address
 
 }
 
 func main() {
-	r := gin.Default() // 初始化router
-	addr := initApp(r)
+	r, addr := initApp()
 	if err := r.Run(addr); err != nil {
 		log.Fatalln("服务启动失败 ：", err)
 	}
