@@ -50,7 +50,7 @@ func (ac *Controller) BatchDelete(c *gin.Context) {
 //	// 判断 如果不是超级管理员，就必须进行严苛的“作者本人”所有权校验
 //	if group != "admin" {
 //		// 获取 article 的数据
-//		article, err := ac.articleRepo.GetArticleDetailsById(input.ID)
+//		article, err := ac.articleRepo.GetArticleInfosById(input.ID)
 //		if err != nil || article == nil {
 //			response.FailClient(c, "删除失败，目标文章不存在")
 //			return

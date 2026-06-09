@@ -9,54 +9,40 @@ import (
 	"weblog/router"
 	"weblog/utils"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func initRouter(db *gorm.DB, r *gin.Engine) {
-	// 初始化 Repository (数据层)，把 database 注入进去
-	repos := models.NewRepositories(db)
-	// 初始化 Controller (控制层)，把 repo 注入进去
-	ct := ctrls.NewControllers(repos)
-	api := r.Group("/api/v1")
-	{
-		router.Article(db, ct.Article, api)
-		//router.User(db, ct.User, api)
-		//router.SystemConfig(db, ct.User, api)
-		// 以后加功能只需要在这继续追加：
-		// api.POST("/articles", articleCtrl.Create)
-		// api.POST("/comments", commentCtrl.Create)
-	}
+func initRouter(ac *ctrls.Controllers, r *gin.Engine) *gin.Engine {
+	//  挂载全局标准中间件
+	r.Use(gin.Logger())   // 打印请求日志
+	r.Use(gin.Recovery()) // 崩溃恢复，防止 panic 导致进程挂掉
+	// r.Use(middleware.Cors()) // 如果有跨域需求，可以在这里挂载跨域中间件
+	// 限制上传文件大小
+	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
+	r.MaxMultipartMemory = 8 << 20 // 8 MiB
+
+	// 注册前台公开路由（传 controller 进去）
+	router.InitBlogRoutes(r, ac)
+
+	// 注册后台管理路由（传 controller 进去）
+	router.InitAdminRoutes(r, ac)
+
+	return r
 
 }
 
 func initApp(conf *utils.Config) (*gin.Engine, string) {
 	r := gin.Default() // 初始化router
 
-	// 初始化核心组件
+	// 初始化数据库连接
 	db := database.InitMySQL(conf.Database.Mysql)
-	// 载入路由系统，并把 database 注入进去
-	initRouter(db, r)
 
-	// 限制上传文件大小
-	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
-	r.MaxMultipartMemory = 8 << 20 // 8 MiB
+	// 初始化 Repository
+	repos := models.NewRepositories(db)
+	ac := ctrls.NewControllers(repos)
 
-	// pprof.Register(r)
-	// 使用gin自带的异常恢复中间件，避免出现异常时程序退出
-	r.Use(gin.Recovery())
-
-	// 添加 CORS 中间件
-	r.Use(cors.New(cors.Config{
-		// AllowAllOrigins:  true,
-		AllowOrigins:     []string{"http://127.0.0.1:8000"}, // 前端地址
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+	// 载入路由系统，并把 database 等依赖注入进去
+	r = initRouter(ac, r)
 
 	// 模式为 release
 	gin.SetMode(gin.ReleaseMode)

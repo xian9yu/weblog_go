@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (ac *Controller) Edit(c *gin.Context) {
+func (ac *Controller) Update(c *gin.Context) {
 	var input dto.ArticleUpdateInput
 	if err := c.ShouldBindQuery(&input); err != nil {
 		response.FailClient(c, "文章更新参数格式不正确")
@@ -59,7 +59,7 @@ func (ac *Controller) Edit(c *gin.Context) {
 		"status":     input.Status,
 		"updated_at": time.Now(),
 	}
-	rows, err := ac.articleRepo.Edit(input.ID, updateMap)
+	rows, err := ac.articleRepo.Update(input.ID, updateMap)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，文章更新失败")
 		return

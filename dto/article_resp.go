@@ -14,8 +14,8 @@ type ArticleListResponse struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-// ArticleDetailResponse 用于文章详情页（包含正文，但过滤了后台备注等内部字段）
-type ArticleDetailResponse struct {
+// ArticleInfoResponse 用于文章详情页（包含正文，但过滤了后台备注等内部字段）
+type ArticleInfoResponse struct {
 	ID           uint64    `json:"id"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`       // 文章正文

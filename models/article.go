@@ -46,7 +46,7 @@ func (repo *ArticleRepository) Add(article Article) (uint64, error) {
 	return article.ID, nil
 }
 
-func (repo *ArticleRepository) Edit(id uint64, articleData map[string]any) (int64, error) {
+func (repo *ArticleRepository) Update(id uint64, articleData map[string]any) (int64, error) {
 	result := repo.db.Model(&Article{}).
 		Where("id = ?", id).
 		Updates(articleData)
@@ -172,8 +172,8 @@ func (repo *ArticleRepository) ArticleTitleExists(title string, excludeId uint64
 
 }
 
-// GetArticleDetailsById 通过 id 获取详情
-func (repo *ArticleRepository) GetArticleDetailsById(articleId uint64) (*Article, error) {
+// GetArticleInfosById 通过 id 获取详情
+func (repo *ArticleRepository) GetArticleInfosById(articleId uint64) (*Article, error) {
 	var article Article
 	err := repo.db.Where("allow_view = ? and id = ?", "y", articleId).Find(&article).Error
 	return &article, err

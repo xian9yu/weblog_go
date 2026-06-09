@@ -142,8 +142,8 @@ func (repo *UserRepository) CheckEmailExist(email string) (bool, error) {
 	return count > 0, err
 }
 
-// GetUserDetailsById 获取用户详情ById
-func (repo *UserRepository) GetUserDetailsById(userId uint64) (*User, error) {
+// GetGetUserInfoById 获取用户详情ById
+func (repo *UserRepository) GetGetUserInfoById(userId uint64) (*User, error) {
 	var user User
 	err := repo.db.First(&user, userId).Error
 	if err != nil {
@@ -152,8 +152,8 @@ func (repo *UserRepository) GetUserDetailsById(userId uint64) (*User, error) {
 	return &user, nil
 }
 
-// GetUserDetailsByEmail 获取用户详情ByEmail
-func (repo *UserRepository) GetUserDetailsByEmail(userEmail string) (*User, error) {
+// GetGetUserInfoByEmail 获取用户详情ByEmail
+func (repo *UserRepository) GetGetUserInfoByEmail(userEmail string) (*User, error) {
 	var user User
 	err := repo.db.Where("email = ?", userEmail).First(&user).Error
 	if err != nil {
@@ -205,25 +205,3 @@ func (repo *UserRepository) GetList(in dto.UserListInput) (total int64, list []U
 
 	return total, list, err
 }
-
-// 事务
-
-//func (repo *UserRepository) TxAdd(tx *gorm.DB) (userId uint64, rowsAffected int64, err error) {
-//	var user User
-//	result := tx.Create(&user)
-//	return user.Id, result.RowsAffected, result.Error
-//}
-//
-//func (repo *UserRepository) TxEdit(tx *gorm.DB, id uint64) (rowsAffected int64, err error) {
-//	var user User
-//	result := tx.Model(&User{}).Where("id = ?", id).Updates(user)
-//	return result.RowsAffected, result.Error
-//}
-
-// TxCountTotalUsers   事务查询用户总数
-//func (repo *UserRepository) TxCountTotalUsers(tx *gorm.DB) (count int64, err error) {
-//	if err = tx.Model(&User{}).Count(&count).Error; err != nil {
-//		return 0, err
-//	}
-//	return count, nil
-//}

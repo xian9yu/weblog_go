@@ -27,8 +27,8 @@ type ArticlePageQueryInput struct {
 	State        *int8  `form:"state" binding:"omitempty,oneof=0 1"`        // 筛选状态，选填。用指针是为了能区分前端传的是 0 还是没传
 }
 
-// ArticleDetailInput 获取文章详情的请求入参
-type ArticleDetailInput struct {
+// ArticleInfoInput 获取文章详情的请求入参
+type ArticleInfoInput struct {
 	ID uint64 `form:"id" uri:"id" binding:"required,gt=0"`
 }
 

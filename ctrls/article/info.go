@@ -7,14 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetDetailsById article 详情
-func (ac *Controller) GetDetailsById(c *gin.Context) {
-	var input dto.ArticleDetailInput
+// GetInfoById article 详情
+func (ac *Controller) GetInfoById(c *gin.Context) {
+	var input dto.ArticleInfoInput
 	if err := c.ShouldBindQuery(&input); err != nil {
 		response.FailClient(c, "文章查询参数格式不正确")
 		return
 	}
-	article, err := ac.articleRepo.GetArticleDetailsById(input.ID)
+	article, err := ac.articleRepo.GetArticleInfosById(input.ID)
 	if err != nil || article == nil {
 		response.FailClient(c, "文章不存在或已被删除")
 		c.Abort()
@@ -22,13 +22,13 @@ func (ac *Controller) GetDetailsById(c *gin.Context) {
 	}
 
 	//article.Id
-	user, err := ac.userRepo.GetUserDetailsById(article.ID)
+	user, err := ac.userRepo.GetGetUserInfoById(article.ID)
 	if err != nil || user == nil {
 		response.FailClient(c, "用户不存在或已被删除")
 		c.Abort()
 		return
 	}
-	output := dto.ArticleDetailResponse{
+	output := dto.ArticleInfoResponse{
 		ID:         article.ID,
 		Title:      article.Title,
 		Content:    article.Content,

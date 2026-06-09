@@ -24,7 +24,7 @@ package middleware
 //		auth := models.Auth{
 //			Token: token,
 //		}
-//		authDetails, err := auth.GetDetailsByToken()
+//		authDetails, err := auth.GetInfoByToken()
 //		if err != nil {
 //			response.FailUnauthorized(c, "token失效，请重新登录")
 //			c.Abort()
@@ -49,7 +49,7 @@ package middleware
 //		if uint64(time.Now().Unix())-authDetails.LoginTime < uint64(3/utils.ExpireTime) {
 //			// 更新 token过期时间
 //			auth.LoginTime = uint64(time.Now().Unix())
-//			_, _ = auth.Edit()
+//			_, _ = auth.Update()
 //		}
 //
 //		c.Set("token", token)

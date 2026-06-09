@@ -25,9 +25,9 @@ func (ac *Controller) GetConfigList(c *gin.Context) {
 	}
 
 	// 组装出参 DTO 数组，过滤不必要的底层细节，规范 JSON 字段
-	items := make([]dto.ConfigDetailOutput, 0, len(modelsList))
+	items := make([]dto.ConfigInfoOutput, 0, len(modelsList))
 	for _, config := range modelsList {
-		items = append(items, dto.ConfigDetailOutput{
+		items = append(items, dto.ConfigInfoOutput{
 			Id:        config.Id,
 			Key:       config.Key,
 			Value:     config.Value,
@@ -38,7 +38,7 @@ func (ac *Controller) GetConfigList(c *gin.Context) {
 	}
 
 	if len(items) == 0 {
-		items = []dto.ConfigDetailOutput{}
+		items = []dto.ConfigInfoOutput{}
 	}
 
 	output := dto.ConfigListOutput{

@@ -15,7 +15,7 @@ type SystemConfig struct {
 	Remark    string    `json:"remark" gorm:"type:varchar(250);not null;default:'';comment:配置项备注介绍"`
 	Status    int8      `json:"status" gorm:"type:tinyint;not null;default:1;comment:状态: 1启用 2禁用"`
 	CreatedAt time.Time `json:"created_at" gorm:"not null;comment:创建时间"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"comment:编辑时间"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"not null;comment:编辑时间"`
 }
 
 type SystemConfigRepository struct {

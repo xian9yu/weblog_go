@@ -9,18 +9,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetDetailsById 获取详情
-func (ac *Controller) GetDetailsById(c *gin.Context) {
-	var input dto.UserDetailInput
+// GetInfoById 获取详情
+func (ac *Controller) GetInfoById(c *gin.Context) {
+	var input dto.UserInfoInput
 
 	// 针对 uri:"id" 标签，必须使用 ShouldBindUri 一键绑定和格式化
-	// 路由定义如：r.GET("/api/v1/admin/user/:id", ac.GetUserDetail)
+	// 路由定义如：r.GET("/api/v1/admin/user/:id", ac.GetUserInfo)
 	if err := c.ShouldBindUri(&input); err != nil {
 		response.FailClient(c, "用户ID格式不正确")
 		return
 	}
 
-	user, err := ac.userRepo.GetUserDetailsById(input.ID)
+	user, err := ac.userRepo.GetGetUserInfoById(input.ID)
 	if err != nil {
 		// 精准拦截 GORM 的查无此人错误
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -34,16 +34,16 @@ func (ac *Controller) GetDetailsById(c *gin.Context) {
 	response.Ok(c, user)
 }
 
-// GetDetailsByEmail 获取详情
-func (ac *Controller) GetDetailsByEmail(c *gin.Context) {
-	var input dto.UserDetailInput
+// GetInfoByEmail 获取详情
+func (ac *Controller) GetInfoByEmail(c *gin.Context) {
+	var input dto.UserInfoInput
 	// 绑定路径中的 :email（Gin 会自动进行 URL 解码，将 %40 还原为 @）
 	if err := c.ShouldBindUri(&input); err != nil {
 		response.FailClient(c, "邮箱格式不正确")
 		return
 	}
 
-	user, err := ac.userRepo.GetUserDetailsByEmail(input.Email)
+	user, err := ac.userRepo.GetGetUserInfoByEmail(input.Email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "该邮箱对应的用户不存在")

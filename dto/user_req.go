@@ -34,8 +34,8 @@ type UserListInput struct {
 	OrderBy  string `form:"order_by"`
 }
 
-// UserDetailInput 获取用户详情的请求入参
-type UserDetailInput struct {
+// UserInfoInput 获取用户详情的请求入参
+type UserInfoInput struct {
 	ID    uint64 `uri:"id" binding:"required_without=Email,omitempty,gt=0" label:"用户ID"`
 	Email string `uri:"email" binding:"required_without=ID,omitempty,email,max=100" label:"用户邮箱"`
 }

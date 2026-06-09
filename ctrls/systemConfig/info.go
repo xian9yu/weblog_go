@@ -31,7 +31,7 @@ func (ac *Controller) GetConfigById(c *gin.Context) {
 	}
 
 	// 组装出参 DTO，过滤或规范化返回的 JSON 结构
-	output := dto.ConfigDetailOutput{
+	output := dto.ConfigInfoOutput{
 		Id:        config.Id,
 		Key:       config.Key,
 		Value:     config.Value,
