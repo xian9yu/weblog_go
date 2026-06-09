@@ -53,12 +53,11 @@ func (ac *Controller) Edit(c *gin.Context) {
 		}
 	}
 
-	nowTime := uint64(time.Now().Unix())
 	updateMap := map[string]any{
-		"title":        input.Title,
-		"content":      input.Content,
-		"status":       input.Status,
-		"updated_time": nowTime,
+		"title":      input.Title,
+		"content":    input.Content,
+		"status":     input.Status,
+		"updated_at": time.Now(),
 	}
 	rows, err := ac.articleRepo.Edit(input.ID, updateMap)
 	if err != nil {

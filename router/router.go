@@ -1,97 +1,66 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"weblog/ctrls/article"
-	"weblog/ctrls/category"
-	"weblog/ctrls/setting"
-	"weblog/ctrls/upload"
-	"weblog/ctrls/user"
 	"weblog/middleware"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func User(r *gin.Engine) {
-	u := r.Group("/user/")
-	// 公开接口
+func Article(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
+	// 🌲 1. 前台公开路由组（无需登录）
+	guestGroup := r.Group("/article")
 	{
-		u.POST("/sign_in", user.SignIn)
-		u.POST("/sign_up", user.SignUp)
+		guestGroup.GET("/details/:id", articleCtrl.GetDetailsById) // 简化：/article/details/10 直接拿 :id
+		guestGroup.GET("/list", articleCtrl.GuestList)             // 查全量、查分类一箭双雕：/article/list
 	}
-
-	u.Use(middleware.Auth()) // 鉴权
+	// 🔒 2. 后台管理路由组（必须鉴权）
+	adminGroup := r.Group("/admin/article").Use(middleware.JWTAuth())
 	{
-		u.GET("/details/id/:id", user.GetDetailsById)
-		u.GET("/details/mail/:mail", user.GetDetailsByMail)
-		u.GET("/details/account/:account", user.GetDetailsByAccount)
-		u.POST("/edit", user.Edit)
-		u.POST("/delete", user.Delete)
-		u.POST("/sign_out", user.SignOut)
-
-	}
-	// 仅管理员可操作
-	u.Use(middleware.AdminAuth()) // 鉴权
-	{
-		u.GET("/list", user.List)
+		adminGroup.POST("/create", articleCtrl.Create)
+		adminGroup.POST("/edit", articleCtrl.Edit)
+		adminGroup.POST("/delete", articleCtrl.BatchDelete)
+		adminGroup.GET("/list", articleCtrl.AdminList)
 	}
 }
 
-func Article(r *gin.Engine) {
-	a := r.Group("/article/")
-	// 公开接口
-	{
-		a.GET("/details/id/:id", article.GetDetailsById)
-		a.GET("/details/title/:title", article.GetDetailsByTitle)
-		a.GET("/list", article.List)
-		a.GET("/category_list", article.CategoryList)
-	}
-
-	a.Use(middleware.Auth()) // 鉴权
-	{
-		a.POST("/add", article.Add)
-		a.POST("/edit", article.Edit)
-		a.POST("/delete", article.Delete)
-	}
+func User(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
+	//u := r.Group("/user/")
+	//// 公开接口
+	//{
+	//	u.POST("/sign_in", user.SignIn)
+	//	u.POST("/sign_up", user.SignUp)
+	//}
+	//
+	////u.Use(middleware.JWTAuth()) // 鉴权
+	//{
+	//	u.GET("/details/id/:id", user.GetDetailsById)
+	//	u.GET("/details/email/:email", user.GetDetailsByEmail)
+	//	//u.GET("/details/account/:account", user.GetDetailsByAccount)
+	//	u.POST("/edit", user.Edit)
+	//	u.POST("/delete", user.Delete)
+	//	u.POST("/sign_out", user.SignOut)
+	//
+	//}
+	//// 仅管理员可操作
+	////u.Use(middleware.AdminAuth()) // 鉴权
+	//{
+	//	u.GET("/list", user.List)
+	//}
 }
 
-func Category(r *gin.Engine) {
-	c := r.Group("/category/")
-	c.Use(middleware.Auth()) // 鉴权
-	{
-		c.GET("/list", category.List)
-		c.GET("/details/id/:id", category.GetDetailsById)
-		c.GET("/details/name/:name", category.GetDetailsByName)
-	}
+func SystemConfig(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
+	//s := r.Group("/systemConfig/")
 
 	// 仅管理员可操作
-	c.Use(middleware.AdminAuth()) // 鉴权
-	{
-		c.POST("/add", category.Add)
-		c.POST("/edit", category.Edit)
-		c.POST("/delete", category.Delete)
-	}
-}
-
-func Setting(r *gin.Engine) {
-	s := r.Group("/setting/")
-
-	// 仅管理员可操作
-	s.Use(middleware.AdminAuth()) // 鉴权
-	{
-		s.POST("/add", setting.Add)
-		s.POST("/edit", setting.Edit)
-		s.POST("/delete", setting.Delete)
-		s.GET("/list", setting.List)
-		s.GET("/details/id/:id", setting.GetDetailsById)
-		s.GET("/details/name/:name", setting.GetDetailsByName)
-	}
-}
-func Upload(r *gin.Engine) {
-	s := r.Group("/upload/")
-
-	s.Use(middleware.Auth()) // 鉴权
-	{
-		s.POST("/image", upload.Image)
-		s.POST("/delete", upload.Delete)
-
-	}
+	//s.Use(middleware.AdminAuth()) // 鉴权
+	//{
+	//	s.POST("/add", systemConfig.Add)
+	//	s.POST("/edit", systemConfig.Edit)
+	//	s.POST("/delete", systemConfig.Delete)
+	//	s.GET("/list", systemConfig.List)
+	//	s.GET("/details/id/:id", systemConfig.GetDetailsById)
+	//	s.GET("/details/name/:name", systemConfig.GetDetailsByName)
+	//}
 }

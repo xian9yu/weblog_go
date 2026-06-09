@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"strings"
 	"time"
 	"weblog/utils"
@@ -33,6 +35,18 @@ func JWTAuth() gin.HandlerFunc {
 		if err != nil {
 			response.FailUnauthorized(c, "登录令牌无效或已过期，请重新登录")
 			c.Abort()
+			return
+		}
+
+		// 计算一下当前请求 Token 的 MD5
+		tokenStr := parts[1]
+		hasher := md5.New()
+		hasher.Write([]byte(tokenStr))
+		tokenMd5 := hex.EncodeToString(hasher.Sum(nil))
+		//  拦截token：如果黑名单里有它，说明点了退出登录！
+		if utils.Blacklist.Contains(tokenMd5) {
+			response.FailUnauthorized(c, "登录已失效，请重新登录")
+			c.Abort() // 必须 Abort，拒绝他继续访问后面的 Controller
 			return
 		}
 

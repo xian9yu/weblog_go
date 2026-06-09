@@ -1,4 +1,4 @@
-package article
+package user
 
 import (
 	"weblog/models"

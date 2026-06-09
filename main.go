@@ -22,6 +22,8 @@ func initRouter(db *gorm.DB, r *gin.Engine) {
 	api := r.Group("/api/v1")
 	{
 		router.Article(db, ct.Article, api)
+		//router.User(db, ct.User, api)
+		//router.SystemConfig(db, ct.User, api)
 		// 以后加功能只需要在这继续追加：
 		// api.POST("/articles", articleCtrl.Create)
 		// api.POST("/comments", commentCtrl.Create)
@@ -29,12 +31,7 @@ func initRouter(db *gorm.DB, r *gin.Engine) {
 
 }
 
-func initApp() (*gin.Engine, string) {
-	// 启动时一次性加载配置
-	conf, err := utils.InitConfig("config.yaml")
-	if err != nil {
-		log.Fatalf("❌ 项目启动失败, 配置加载异常: %v\n", err)
-	}
+func initApp(conf *utils.Config) (*gin.Engine, string) {
 	r := gin.Default() // 初始化router
 
 	// 初始化核心组件
@@ -69,7 +66,19 @@ func initApp() (*gin.Engine, string) {
 }
 
 func main() {
-	r, addr := initApp()
+	// 启动时一次性加载配置
+	conf, err := utils.InitConfig("config.yaml")
+	if err != nil {
+		log.Fatalf("❌ 项目启动失败, 配置加载异常: %v\n", err)
+	}
+
+	// 将 Go 运行时的默认本地时区强行指向上海
+	time.Local, err = time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		log.Printf("强制设置 Go 运行时时区失败: %v", err)
+	}
+
+	r, addr := initApp(conf)
 	if err := r.Run(addr); err != nil {
 		log.Fatalln("服务启动失败 ：", err)
 	}

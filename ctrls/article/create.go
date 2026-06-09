@@ -39,14 +39,14 @@ func (ac *Controller) Create(c *gin.Context) {
 	// 获取 token 详情
 	userId, _ := c.Get("user_id")
 
-	nowTime := uint64(time.Now().Unix())
+	nowTime := time.Now()
 	article := models.Article{
-		Title:       input.Title,
-		Content:     input.Content,
-		UserId:      uint64(utils.AnyToInt(userId)),
-		Status:      input.Status, // 0 代表草稿，1 代表已发布。传 2 或 -1 直接报错拦截
-		CreatedTime: nowTime,
-		UpdatedTime: nowTime,
+		Title:     input.Title,
+		Content:   input.Content,
+		UserId:    uint64(utils.AnyToInt(userId)),
+		Status:    input.Status, // 1 代表已发布，2 代表草稿。传 0 或 -1 直接报错拦截
+		CreatedAt: nowTime,
+		UpdatedAt: nowTime,
 	}
 
 	articleId, err := ac.articleRepo.Add(article)

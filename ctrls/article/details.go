@@ -22,20 +22,20 @@ func (ac *Controller) GetDetailsById(c *gin.Context) {
 	}
 
 	//article.Id
-	user, err := ac.userRepo.GetDetailsById(article.Id)
+	user, err := ac.userRepo.GetUserDetailsById(article.ID)
 	if err != nil || user == nil {
 		response.FailClient(c, "用户不存在或已被删除")
 		c.Abort()
 		return
 	}
 	output := dto.ArticleDetailResponse{
-		ID:          article.Id,
-		Title:       article.Title,
-		Content:     article.Content,
-		AuthorName:  user.Name,
-		Status:      article.Status,
-		CreatedTime: article.CreatedTime,
-		UpdatedTime: article.UpdatedTime,
+		ID:         article.ID,
+		Title:      article.Title,
+		Content:    article.Content,
+		AuthorName: user.Name,
+		Status:     article.Status,
+		CreatedAt:  article.CreatedAt,
+		UpdatedAt:  article.UpdatedAt,
 	}
 
 	response.Ok(c, gin.H{

@@ -6,10 +6,9 @@ require (
 	github.com/alibabacloud-go/darabonba-openapi v0.1.18
 	github.com/alibabacloud-go/dysmsapi-20170525/v2 v2.0.18
 	github.com/alibabacloud-go/tea v1.1.19
-	github.com/aliyun/aliyun-oss-go-sdk v2.2.5+incompatible
-	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-contrib/cors v1.7.7
 	github.com/gin-gonic/gin v1.12.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.1.2
 	github.com/rs/xid v1.4.0
 	github.com/spf13/viper v1.12.0
@@ -31,6 +30,7 @@ require (
 	github.com/bytedance/sonic/loader v0.5.0 // indirect
 	github.com/clbanning/mxj/v2 v2.5.6 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
+	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.12 // indirect
 	github.com/gin-contrib/sse v1.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -67,7 +67,6 @@ require (
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
-	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

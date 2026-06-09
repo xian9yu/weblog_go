@@ -6,18 +6,18 @@ import (
 
 type Repositories struct {
 	Article      *ArticleRepository
-	Auth         *AuthRepository
 	User         *UserRepository
 	SystemConfig *SystemConfigRepository
+	Database     *gorm.DB
 }
 
 // NewRepositories 一次性把所有 Repo 初始化好
 func NewRepositories(db *gorm.DB) *Repositories {
 	return &Repositories{
 		Article:      NewArticleRepository(db),
-		Auth:         NewAuthRepository(db),
 		User:         NewUserRepository(db),
 		SystemConfig: NewSystemConfigRepository(db),
+		Database:     db,
 	}
 }
 
@@ -25,8 +25,8 @@ func NewRepositories(db *gorm.DB) *Repositories {
 func (repos *Repositories) WithTx(tx *gorm.DB) *Repositories {
 	return &Repositories{
 		Article:      repos.Article.WithTx(tx),
-		Auth:         repos.Auth.WithTx(tx),
 		SystemConfig: repos.SystemConfig.WithTx(tx),
 		User:         repos.User.WithTx(tx),
+		Database:     tx,
 	}
 }

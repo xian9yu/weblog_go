@@ -18,10 +18,12 @@ func (ac *Controller) GuestList(c *gin.Context) {
 			return
 		}
 	}
-	// 2. 规范化分页默认值，防止前端没传导致计算出负数
-	if input.Page <= 0 {
-		input.Page = 1
+	// 如果前端没传 page_no，或者传了 0，默认第 1 页
+	if input.PageNo <= 0 {
+		input.PageNo = 1
 	}
+
+	// 如果前端没传 page_size，或者传了 0，默认每页 10 条
 	if input.PageSize <= 0 {
 		input.PageSize = 10
 	}
@@ -35,11 +37,11 @@ func (ac *Controller) GuestList(c *gin.Context) {
 	response.Ok(c, gin.H{
 		"total": total,
 		"list":  list,
-		"page":  input.Page,
+		"page":  input.PageNo,
 	})
 }
 
-// 路由大概长这样：GET /api/v1/admin/categories/:name/articles （需要 JWT 中间件拦截）
+// AdminList 路由大概长这样：GET /api/v1/admin/categories/:name/articles （需要 JWT 中间件拦截）
 func (ac *Controller) AdminList(c *gin.Context) {
 	var input dto.ArticlePageQueryInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -49,10 +51,12 @@ func (ac *Controller) AdminList(c *gin.Context) {
 		}
 	}
 
-	// 2. 规范化分页默认值，防止前端没传导致计算出负数
-	if input.Page <= 0 {
-		input.Page = 1
+	// 如果前端没传 page_no，或者传了 0，默认第 1 页
+	if input.PageNo <= 0 {
+		input.PageNo = 1
 	}
+
+	// 如果前端没传 page_size，或者传了 0，默认每页 10 条
 	if input.PageSize <= 0 {
 		input.PageSize = 10
 	}
@@ -72,6 +76,6 @@ func (ac *Controller) AdminList(c *gin.Context) {
 	response.Ok(c, gin.H{
 		"total": total,
 		"list":  list,
-		"page":  input.Page,
+		"page":  input.PageNo,
 	})
 }

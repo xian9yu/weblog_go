@@ -2,7 +2,7 @@ app: # 服务监听 host,port
   address: 127.0.0.1:1234
 
 database: # 数据库
-  mysql: weblog:RyZcnzA4Axj8PWjM@tcp(127.0.0.1:3306)/weblog?charset=utf8
+  mysql: weblog:RyZcnzA4Axj8PWjM@tcp(127.0.0.1:3306)/weblog?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 #  redis: # 缓存
 #    addr: localhost:6379
