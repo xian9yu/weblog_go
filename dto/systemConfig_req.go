@@ -17,6 +17,15 @@ type ConfigGetByKeyInput struct {
 	Key string `uri:"key" binding:"required,max=60" label:"配置键名"`
 }
 
+// ConfigBatchGetByKeysInput 批量获取配置项入参
+type ConfigBatchGetByKeysInput struct {
+	// 前端传入：{"keys": ["site_title", "site_logo", "icp_number"]}
+	Keys []string `json:"keys" binding:"required,gt=0" label:"配置键名列表"`
+}
+
+// ConfigBatchOutput 批量获取配置出参（直接定义为 map 别名，或者直接在 Controller 里用）
+type ConfigBatchOutput map[string]string
+
 // ConfigGetByIdInput 通过ID查询配置的入参
 // 路由：GET /api/v1/admin/config/:id
 type ConfigGetByIdInput struct {

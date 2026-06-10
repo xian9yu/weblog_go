@@ -2,69 +2,10 @@ package router
 
 import (
 	"weblog/ctrls"
-	"weblog/ctrls/article"
 	"weblog/middleware"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
-
-func Article(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
-	// 🌲 1. 前台公开路由组（无需登录）
-	guestGroup := r.Group("/article")
-	{
-		guestGroup.GET("/details/:id", articleCtrl.GetInfoById) // 简化：/article/details/10 直接拿 :id
-		guestGroup.GET("/list", articleCtrl.GuestList)          // 查全量、查分类一箭双雕：/article/list
-	}
-	// 🔒 2. 后台管理路由组（必须鉴权）
-	adminGroup := r.Group("/admin/article").Use(middleware.JWTAuth())
-	{
-		adminGroup.POST("/create", articleCtrl.Create)
-		adminGroup.POST("/edit", articleCtrl.Update)
-		adminGroup.POST("/delete", articleCtrl.BatchDelete)
-		adminGroup.GET("/list", articleCtrl.AdminList)
-	}
-}
-
-func User(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
-	//u := r.Group("/user/")
-	//// 公开接口
-	//{
-	//	u.POST("/sign_in", user.SignIn)
-	//	u.POST("/sign_up", user.SignUp)
-	//}
-	//
-	////u.Use(middleware.JWTAuth()) // 鉴权
-	//{
-	//	u.GET("/details/id/:id", user.GetInfoById)
-	//	u.GET("/details/email/:email", user.GetInfoByEmail)
-	//	//u.GET("/details/account/:account", user.GetInfoByAccount)
-	//	u.POST("/edit", user.Edit)
-	//	u.POST("/delete", user.Delete)
-	//	u.POST("/sign_out", user.SignOut)
-	//
-	//}
-	//// 仅管理员可操作
-	////u.Use(middleware.AdminAuth()) // 鉴权
-	//{
-	//	u.GET("/list", user.List)
-	//}
-}
-
-func SystemConfig(db *gorm.DB, articleCtrl *article.Controller, r *gin.RouterGroup) {
-	//s := r.Group("/systemConfig/")
-
-	// 仅管理员可操作
-	//s.Use(middleware.AdminAuth()) // 鉴权
-	//{
-	//	s.POST("/add", systemConfig.Add)
-	//	s.POST("/edit", systemConfig.Edit)
-	//	s.POST("/delete", systemConfig.Delete)
-	//	s.GET("/list", systemConfig.List)
-	//	s.GET("/details/id/:id", systemConfig.GetInfoById)
-	//	s.GET("/details/name/:name", systemConfig.GetInfoByName)
-	//}
-}
 
 func InitBlogRoutes(r *gin.Engine, ac *ctrls.Controllers) {
 	// 建立前台根路由组
@@ -74,11 +15,11 @@ func InitBlogRoutes(r *gin.Engine, ac *ctrls.Controllers) {
 		// 游客看文章列表（只看已发布）
 		blogGroup.GET("/articles", ac.Article.GuestList)
 		// 浏览单篇文章详情（通过 URL 参数 :id 传参）
-		blogGroup.GET("/article/detail/:id", ac.Article.GetInfoById)
+		blogGroup.GET("/article/info/:id", ac.Article.GetInfoById)
 
 		// ================= ⚙️ 系统配置前台接口 =================
 		// 前台获取单项配置（比如网站标题、ICP备案号）
-		blogGroup.GET("/config/value", ac.SystemConfig.GetConfigByKey)
+		blogGroup.GET("/config/batch", ac.SystemConfig.GetBatchValues)
 
 		// ================= 🔑 认证/登录接口 =================
 		// 🌟 登录绝对不能加 JWT 拦截器，否则没人能登录成功！

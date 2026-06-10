@@ -9,6 +9,27 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetBatchValues 批量获取配置项的值
+// POST /api/v1/config/batch
+func (ac *Controller) GetBatchValues(c *gin.Context) {
+	var input dto.ConfigBatchGetByKeysInput
+
+	//  keys 是个数组，用 POST + JSON 传参最稳妥
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.FailClient(c, "参数错误: keys 列表不能为空")
+		return
+	}
+
+	// 批量全家桶查询
+	configMap, err := ac.systemConfigRepo.GetValuesByKeys(input.Keys)
+	if err != nil {
+		response.FailServer(c, "批量获取配置失败")
+		return
+	}
+
+	response.Ok(c, configMap)
+}
+
 // GetConfigById 通过ID获取完整配置详情（管理员专属）
 // 路由注册：r.GET("/api/v1/admin/config/detail/:id", ac.GetConfigById)
 func (ac *Controller) GetConfigById(c *gin.Context) {

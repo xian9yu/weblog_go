@@ -80,7 +80,7 @@ func (repo *SystemConfigRepository) GetConfigList(in dto.ConfigListInput) ([]Sys
 	return list, total, err
 }
 
-// GetValueByKey 根据 Key 快速获取配置值（有 uniqueIndex，这里速度极快）
+// GetValueByKey 根据 Key 快速获取单个配置 value（有 uniqueIndex，这里速度极快）
 func (repo *SystemConfigRepository) GetValueByKey(key string) (string, error) {
 	var config SystemConfig
 	// 性能优化：只查 value 字段，不查 id, remark, time，减少 MySQL 网络 I/O
@@ -92,6 +92,28 @@ func (repo *SystemConfigRepository) GetValueByKey(key string) (string, error) {
 		return "", err
 	}
 	return config.Value, nil
+}
+
+// GetValuesByKeys 批量获取配置值（支持 IN 查询 + Map 映射）
+func (repo *SystemConfigRepository) GetValuesByKeys(keys []string) (map[string]string, error) {
+	var configs []SystemConfig
+	resultMap := make(map[string]string, len(keys))
+
+	// 只查 key 和 value 两个字段，利用 IN 语法一条 SQL 打包带走
+	err := repo.db.Select("`key`, `value`").
+		Where("`key` IN ?", keys).
+		Find(&configs).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 将 Slice 转成 Map 结构
+	for _, config := range configs {
+		resultMap[config.Key] = config.Value
+	}
+
+	return resultMap, nil
 }
 
 // GetConfigById 通过主键ID获取配置完整详情
