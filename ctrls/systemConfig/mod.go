@@ -6,14 +6,25 @@ import (
 	"gorm.io/gorm"
 )
 
+//	type Controller struct {
+//		systemConfigRepo *models.SystemConfigRepository // 只拿自己需要的 repo
+//		baseDB           *gorm.DB
+//	}
+//
+//	func NewController(repo *models.SystemConfigRepository, db *gorm.DB) *Controller {
+//		return &Controller{
+//			systemConfigRepo: repo,
+//			baseDB:           db,
+//		}
+//	}
 type Controller struct {
-	systemConfigRepo *models.SystemConfigRepository // 只拿自己需要的 repo
-	baseDB           *gorm.DB
+	baseDB *gorm.DB
+	repos  *models.Repositories
 }
 
-func NewController(repo *models.SystemConfigRepository, db *gorm.DB) *Controller {
+func NewController(repos *models.Repositories) *Controller {
 	return &Controller{
-		systemConfigRepo: repo,
-		baseDB:           db,
+		baseDB: repos.Database, // 或者是原生的 db
+		repos:  repos,
 	}
 }

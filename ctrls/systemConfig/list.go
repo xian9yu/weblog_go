@@ -12,15 +12,17 @@ import (
 func (ac *Controller) GetConfigList(c *gin.Context) {
 	// 绑定并强校验 URL 查询参数（?page=1&page_size=10&keyword=site）
 	var input dto.ConfigListInput
-	if err := c.ShouldBindQuery(&input); err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 
 	// 调用 Repo 层执行高性能、防污染的分页查询
-	modelsList, total, err := ac.systemConfigRepo.GetConfigList(input)
+	modelsList, total, err := ac.repos.SystemConfig.GetConfigList(input)
 	if err != nil {
 		response.FailServer(c, "获取配置列表失败")
+		c.Abort()
 		return
 	}
 

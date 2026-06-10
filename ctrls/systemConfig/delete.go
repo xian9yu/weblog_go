@@ -13,12 +13,14 @@ func (ac *Controller) DeleteConfig(c *gin.Context) {
 	var input dto.ConfigDeleteInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数错误: ID列表不能为空")
+		c.Abort()
 		return
 	}
 
-	err := ac.systemConfigRepo.DeleteConfigs(input.Ids)
+	err := ac.repos.SystemConfig.DeleteConfigs(input.Ids)
 	if err != nil {
 		response.FailServer(c, "删除配置失败")
+		c.Abort()
 		return
 	}
 

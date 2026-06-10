@@ -52,6 +52,7 @@ func InitAdminRoutes(r *gin.Engine, ac *ctrls.Controllers) {
 		adminGroup.GET("/user/info", ac.User.GetInfoById) // 管理员登录后台后，获取自己的基本信息（如：头像、昵称）
 		adminGroup.GET("/user/list", ac.User.List)        // 管理员登录后台后，获取自己的基本信息（如：头像、昵称）
 		adminGroup.PUT("/user/password", ac.User.UpdatePassword)
+		adminGroup.PUT("/user/profile", ac.User.UpdateProfile)
 		adminGroup.POST("/user/logout", ac.User.Logout) // 退出登录 解析出 Token 里的用户 ID 并将其拉黑或让其失效
 		adminGroup.DELETE("/user/delete", ac.User.DeleteAccount)
 	}

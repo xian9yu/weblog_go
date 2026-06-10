@@ -19,18 +19,21 @@ func (ac *Controller) UpdateConfigByKey(c *gin.Context) {
 	}
 
 	// 先检查这个 Key 到底在不在数据库里
-	_, err := ac.systemConfigRepo.GetValueByKey(input.Key)
+	_, err := ac.repos.SystemConfig.GetValueByKey(input.Key)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "该配置项不存在，无法进行修改")
+			c.Abort()
 			return
 		}
 		response.FailServer(c, "检查配置项完整性失败")
+		c.Abort()
 		return
 	}
 
-	if err := ac.systemConfigRepo.UpdateValueByKey(input.Key, input.Value, input.Remark); err != nil {
+	if err := ac.repos.SystemConfig.UpdateValueByKey(input.Key, input.Value, input.Remark); err != nil {
 		response.FailServer(c, "保存配置失败，数据库写入异常")
+		c.Abort()
 		return
 	}
 

@@ -101,9 +101,6 @@ func (repo *SystemConfigRepository) GetValueByKey(key string) (string, error) {
 	// 性能优化：只查 value 字段，不查 id, remark, time，减少 MySQL 网络 I/O
 	err := repo.db.Select("value").Where("`key` = ?", key).First(&config).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return "", nil
-		}
 		return "", err
 	}
 	return config.Value, nil
