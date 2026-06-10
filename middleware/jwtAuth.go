@@ -26,7 +26,6 @@ func JWTAuth() gin.HandlerFunc {
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
 			response.FailUnauthorized(c, "Token格式错误")
-			c.Abort()
 			return
 		}
 
@@ -34,7 +33,6 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := utils.ParseToken(parts[1])
 		if err != nil {
 			response.FailUnauthorized(c, "登录令牌无效或已过期，请重新登录")
-			c.Abort()
 			return
 		}
 
