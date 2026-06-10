@@ -17,8 +17,8 @@ type Controllers struct {
 // NewControllers 注入 Repositories
 func NewControllers(repos *models.Repositories) *Controllers {
 	return &Controllers{
-		Article:      article.NewController(repos.Article, repos.User, repos.Database),
-		User:         user.NewController(repos.Article, repos.User, repos.Database),
-		SystemConfig: systemConfig.NewController(repos.SystemConfig, repos.Database),
+		Article:      article.NewController(repos),
+		User:         user.NewController(repos),
+		SystemConfig: systemConfig.NewController(repos),
 	}
 }
