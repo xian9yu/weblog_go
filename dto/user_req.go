@@ -16,7 +16,7 @@ type UserLoginInput struct {
 // UserUpdateProfileInput 作者在后台修改个人资料（不含密码）
 type UserUpdateProfileInput struct {
 	Name  string `json:"name" binding:"required,max=50" label:"昵称"`
-	Email string `json:"email" binding:"omitempty,email,max=100" label:"邮箱"`
+	Email string `json:"email" binding:"required,email,max=100" label:"邮箱"`
 	// 如果以后有头像、简介等字段，可以在这里直接扩充
 }
 

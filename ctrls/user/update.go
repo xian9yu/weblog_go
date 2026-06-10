@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 	"weblog/dto"
+	"weblog/models"
 	"weblog/utils/response"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 // UpdateProfile 作者修改个人资料（不含密码）
 // 路由：PUT /api/v1/admin/user/profile
 func (ac *Controller) UpdateProfile(c *gin.Context) {
-	currentUserId, _ := c.Get("userId")
+	currentUserId := c.GetUint64("user_id")
 
 	// 绑定 DTO
 	var input dto.UserUpdateProfileInput
@@ -21,17 +22,15 @@ func (ac *Controller) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	// DTO 转 Map，并进行严格的安全过滤
-	userData := map[string]any{
-		"name":       input.Name,
-		"email":      input.Email,
-		"updated_at": time.Now(),
-	}
-
 	// 调用 Repo 执行更新
-	rowsAffected, err := ac.repos.User.UpdateProfile(currentUserId.(uint64), userData)
+	rowsAffected, err := ac.repos.User.UpdateProfile(models.User{
+		ID:        currentUserId,
+		Name:      input.Name,
+		Email:     input.Email,
+		UpdatedAt: time.Now(),
+	})
 	if err != nil {
-		response.FailServer(c, "修改资料失败")
+		response.FailServer(c, "修改资料失败: "+err.Error())
 		c.Abort()
 		return
 	}

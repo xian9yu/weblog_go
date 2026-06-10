@@ -55,8 +55,8 @@ func (repo *UserRepository) Create(user *User) (userId uint64, rowsAffected int6
 }
 
 // UpdateProfile 编辑
-func (repo *UserRepository) UpdateProfile(userId uint64, userData map[string]any) (int64, error) {
-	result := repo.db.Model(&User{}).Where("id = ?", userId).Updates(userData)
+func (repo *UserRepository) UpdateProfile(u User) (int64, error) {
+	result := repo.db.Model(&User{}).Where("id = ?", u.ID).Updates(u)
 	return result.RowsAffected, result.Error
 }
 
