@@ -19,6 +19,7 @@ func (ac *Controller) Login(c *gin.Context) {
 	var input dto.UserLoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数校验失败")
+		c.Abort()
 		return
 	}
 
@@ -28,15 +29,18 @@ func (ac *Controller) Login(c *gin.Context) {
 		// 为了防止黑客暴力破解，无论“用户不存在”还是“密码错误”，统一返回模糊的提示
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "账号或密码错误")
+			c.Abort()
 			return
 		}
 		response.FailServer(c, "系统繁忙，登录失败: "+err.Error())
+		c.Abort()
 		return
 	}
 
 	// 检查账号状态 1启用 2禁用
 	if user.Status != 1 {
 		response.FailForbidden(c, "该账号停止使用")
+		c.Abort()
 		return
 	}
 
@@ -47,6 +51,7 @@ func (ac *Controller) Login(c *gin.Context) {
 	if err != nil {
 		// 密码对不上，报错拦截
 		response.FailClient(c, "账号或密码错误")
+		c.Abort()
 		return
 	}
 

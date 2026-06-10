@@ -15,6 +15,7 @@ func (ac *Controller) GuestList(c *gin.Context) {
 	if err := c.ShouldBindJSON(&input); err != nil {
 		if err := c.ShouldBindJSON(&input); err != nil {
 			response.FailClient(c, "参数解析失败: %v", err)
+			c.Abort()
 			return
 		}
 	}
@@ -31,6 +32,7 @@ func (ac *Controller) GuestList(c *gin.Context) {
 	total, list, err := ac.repos.Article.GetList(input, 0)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，获取文章列表失败")
+		c.Abort()
 		return
 	}
 
@@ -47,6 +49,7 @@ func (ac *Controller) AdminList(c *gin.Context) {
 	if err := c.ShouldBindJSON(&input); err != nil {
 		if err := c.ShouldBindJSON(&input); err != nil {
 			response.FailClient(c, "参数解析失败: %v", err)
+			c.Abort()
 			return
 		}
 	}
@@ -64,12 +67,14 @@ func (ac *Controller) AdminList(c *gin.Context) {
 	currentUserId, exists := c.Get("userId")
 	if !exists {
 		response.FailUnauthorized(c, "登录已失效，请重新登录")
+		c.Abort()
 		return
 	}
 
 	total, list, err := ac.repos.Article.GetList(input, currentUserId.(uint64))
 	if err != nil {
 		response.FailServer(c, "系统繁忙，获取文章列表失败")
+		c.Abort()
 		return
 	}
 

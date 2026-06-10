@@ -41,14 +41,17 @@ func (ac *Controller) Update(c *gin.Context) {
 			// 如果是 GORM 没查到记录，通常会报 ErrRecordNotFound
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				response.FailClient(c, "操作失败，目标文章不存在")
+				c.Abort()
 				return
 			}
 			response.FailServer(c, "系统繁忙，权限校验失败")
+			c.Abort()
 			return
 		}
 
 		if authorId != currentUserId {
 			response.FailForbidden(c, "对不起，您没有权限操作他人的文章")
+			c.Abort()
 			return
 		}
 	}
@@ -62,12 +65,14 @@ func (ac *Controller) Update(c *gin.Context) {
 	rows, err := ac.repos.Article.Update(input.ID, updateMap)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，文章更新失败")
+		c.Abort()
 		return
 	}
 
 	// 判断是否真正影响了行数
 	if rows == 0 {
 		response.FailClient(c, "文章未做任何修改或文章不存在")
+		c.Abort()
 		return
 	}
 

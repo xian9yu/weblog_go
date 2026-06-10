@@ -12,11 +12,13 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 	var input dto.ArticleInfoInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "文章查询参数格式不正确")
+		c.Abort()
 		return
 	}
 	article, err := ac.repos.Article.GetArticleInfosById(input.ID)
 	if err != nil || article == nil {
 		response.FailClient(c, "文章不存在或已被删除")
+		c.Abort()
 		return
 	}
 
@@ -24,6 +26,7 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 
 	if err != nil || user == nil {
 		response.FailClient(c, "文章不存在或已被删除")
+		c.Abort()
 		return
 	}
 	output := dto.ArticleInfoResponse{

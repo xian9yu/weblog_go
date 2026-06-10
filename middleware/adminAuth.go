@@ -16,8 +16,7 @@ package middleware
 //
 //		if token == "" {
 //			response.FailUnauthorized(c, "请求未携带token")
-//			c.Abort()
-//			return
+//	//			return
 //		}
 //
 //		// 判断 token 是否存在
@@ -27,22 +26,19 @@ package middleware
 //		authDetails, err := auth.GetInfoByToken()
 //		if err != nil {
 //			response.FailUnauthorized(c, "token失效，请重新登录")
-//			c.Abort()
-//			return
+//	//			return
 //		}
 //
 //		// 判断 token 过期时间
 //		if uint64(time.Now().Unix())-authDetails.LoginTime > uint64(utils.ExpireTime) {
 //			response.FailUnauthorized(c, "token已过期，请重新登录")
-//			c.Abort()
-//			return
+//	//			return
 //		}
 //
 //		// 限制只允许管理员操作
 //		if authDetails.Group != "admin" {
 //			response.FailUnauthorized(c)
-//			c.Abort()
-//			return
+//	//			return
 //		}
 //
 //		// 判断 token有效时间小于配置中设定时间的三分之一则更新过期时间

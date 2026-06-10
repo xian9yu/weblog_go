@@ -16,12 +16,14 @@ func (ac *Controller) DeleteAccount(c *gin.Context) {
 	// 如果是唯一的超级管理员，拒绝自残行为！
 	if currentUserId == 1 {
 		response.FailClient(c, "为了系统安全，主管理员账号禁止被删除！")
+		c.Abort()
 		return
 	}
 
 	var input dto.UserUnregisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 	fmt.Println(input, currentUserId)
@@ -30,10 +32,12 @@ func (ac *Controller) DeleteAccount(c *gin.Context) {
 	success, err := ac.repos.User.DeleteAccount(currentUserId, input.Password)
 	if err != nil {
 		response.FailServer(c, "注销失败，系统繁忙")
+		c.Abort()
 		return
 	}
 	if !success {
 		response.FailClient(c, "密码错误")
+		c.Abort()
 		return
 	}
 

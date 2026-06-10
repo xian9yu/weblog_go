@@ -18,6 +18,7 @@ func (ac *Controller) Register(c *gin.Context) {
 	var input dto.UserRegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数校验失败: "+err.Error())
+		c.Abort()
 		return
 	}
 
@@ -30,12 +31,14 @@ func (ac *Controller) Register(c *gin.Context) {
 		} else {
 			// 如果是其他数据库挂了的错误（比如连接断开），才真正报错拦截
 			response.FailServer(c, "系统服务繁忙，请稍后再试")
+			c.Abort()
 			return
 		}
 	}
 	// 如果配置明确存在，且被设置为了 false，强行拦截
 	if !canRegister {
 		response.FailClient(c, "当前系统已关闭注册功能")
+		c.Abort()
 		return
 	}
 
@@ -43,10 +46,12 @@ func (ac *Controller) Register(c *gin.Context) {
 	isEmailExist, err := ac.repos.User.CheckEmailExist(input.Email)
 	if err != nil {
 		response.FailClient(c, "参数校验失败，请检查输入格式")
+		c.Abort()
 		return
 	}
 	if isEmailExist {
 		response.FailClient(c, "该邮箱已被其他账号绑定")
+		c.Abort()
 		return
 	}
 
@@ -54,6 +59,7 @@ func (ac *Controller) Register(c *gin.Context) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		response.FailServer(c, "密码加密失败")
+		c.Abort()
 		return
 	}
 
@@ -95,7 +101,7 @@ func (ac *Controller) Register(c *gin.Context) {
 			return err
 		}
 		if rowsAffected == 0 {
-			return errors.New("创建用户未影响任何数据库行")
+			return errors.New("创建用户失败")
 		}
 
 		// 赋值给外层变量供外面 Response 使用
@@ -121,6 +127,7 @@ func (ac *Controller) Register(c *gin.Context) {
 
 	if err != nil {
 		response.FailServer(c, "系统繁忙，注册失败: "+err.Error())
+		c.Abort()
 		return
 	}
 

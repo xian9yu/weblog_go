@@ -13,6 +13,7 @@ func (ac *Controller) List(c *gin.Context) {
 	if tokenGroup != "admin" {
 		// 非管理员访问，返回 403 Forbidden
 		response.FailForbidden(c, "权限不足，仅管理员可查看用户列表")
+		c.Abort()
 		return
 	}
 
@@ -20,6 +21,7 @@ func (ac *Controller) List(c *gin.Context) {
 	var input dto.UserListInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数校验失败: "+err.Error())
+		c.Abort()
 		return
 	}
 
@@ -37,6 +39,7 @@ func (ac *Controller) List(c *gin.Context) {
 	total, list, err := ac.repos.User.GetList(input)
 	if err != nil {
 		response.FailServer(c, "获取用户列表失败")
+		c.Abort()
 		return
 	}
 

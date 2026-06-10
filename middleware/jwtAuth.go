@@ -15,17 +15,18 @@ import (
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 1. 从请求头（Header）中获取 token
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
+		token := c.GetHeader("Authorization")
+		if token == "" {
 			response.FailUnauthorized(c, "请求未携带Token，请先登录")
 			c.Abort() // 必须 Abort，阻止执行后面的业务 Controller
 			return
 		}
 
 		// 检查 Token 格式是否为标准的 "Bearer <token>"
-		parts := strings.SplitN(authHeader, " ", 2)
+		parts := strings.SplitN(token, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
 			response.FailUnauthorized(c, "Token格式错误")
+			c.Abort()
 			return
 		}
 
@@ -33,6 +34,7 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := utils.ParseToken(parts[1])
 		if err != nil {
 			response.FailUnauthorized(c, "登录令牌无效或已过期，请重新登录")
+			c.Abort()
 			return
 		}
 

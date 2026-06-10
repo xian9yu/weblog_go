@@ -17,6 +17,7 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 	// 路由定义如：r.GET("/api/v1/admin/user/:id", ac.GetUserInfo)
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "用户ID格式不正确:"+err.Error())
+		c.Abort()
 		return
 	}
 
@@ -25,9 +26,11 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 		// 精准拦截 GORM 的查无此人错误
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "该用户不存在")
+			c.Abort()
 			return
 		}
 		response.FailServer(c, "获取用户详情失败")
+		c.Abort()
 		return
 	}
 
@@ -40,6 +43,7 @@ func (ac *Controller) GetInfoByEmail(c *gin.Context) {
 	// 绑定路径中的 :email（Gin 会自动进行 URL 解码，将 %40 还原为 @）
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "邮箱格式不正确")
+		c.Abort()
 		return
 	}
 
@@ -47,9 +51,11 @@ func (ac *Controller) GetInfoByEmail(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "该邮箱对应的用户不存在")
+			c.Abort()
 			return
 		}
 		response.FailServer(c, "系统异常，获取详情失败")
+		c.Abort()
 		return
 	}
 

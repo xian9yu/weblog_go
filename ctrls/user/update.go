@@ -17,6 +17,7 @@ func (ac *Controller) UpdateProfile(c *gin.Context) {
 	var input dto.UserUpdateProfileInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 
@@ -31,11 +32,13 @@ func (ac *Controller) UpdateProfile(c *gin.Context) {
 	rowsAffected, err := ac.repos.User.UpdateProfile(currentUserId.(uint64), userData)
 	if err != nil {
 		response.FailServer(c, "修改资料失败")
+		c.Abort()
 		return
 	}
 
 	if rowsAffected == 0 {
 		response.FailClient(c, "资料未做任何变动")
+		c.Abort()
 		return
 	}
 
@@ -51,6 +54,7 @@ func (ac *Controller) UpdatePassword(c *gin.Context) {
 	var input dto.UserUpdatePasswordInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 
@@ -58,11 +62,13 @@ func (ac *Controller) UpdatePassword(c *gin.Context) {
 	ok, err := ac.repos.User.UpdatePassword(uid, input.OldPassword, input.NewPassword)
 	if err != nil {
 		response.FailServer(c, "修改密码系统故障")
+		c.Abort()
 		return
 	}
 
 	if !ok {
 		response.FailClient(c, "原密码输入错误，请重新输入")
+		c.Abort()
 		return
 	}
 
@@ -76,6 +82,7 @@ func (ac *Controller) AdminResetUserPassword(c *gin.Context) {
 	tokenGroup, _ := c.Get("group")
 	if tokenGroup != "admin" {
 		response.FailForbidden(c, "权限不足，仅管理员可重置他人密码")
+		c.Abort()
 		return
 	}
 
@@ -83,6 +90,7 @@ func (ac *Controller) AdminResetUserPassword(c *gin.Context) {
 	var input dto.AdminResetPasswordInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 
@@ -92,6 +100,7 @@ func (ac *Controller) AdminResetUserPassword(c *gin.Context) {
 	uid, _ := currentUserId.(uint64)
 	if input.TargetUserId == uid {
 		response.FailClient(c, "修改自身密码请走『修改个人密码』接口，需验旧密码")
+		c.Abort()
 		return
 	}
 
@@ -99,6 +108,7 @@ func (ac *Controller) AdminResetUserPassword(c *gin.Context) {
 	err := ac.repos.User.ForceUpdatePassword(input.TargetUserId, input.NewPassword)
 	if err != nil {
 		response.FailServer(c, "重置密码失败，数据库写入异常")
+		c.Abort()
 		return
 	}
 

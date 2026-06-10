@@ -14,6 +14,7 @@ func (ac *Controller) BatchDelete(c *gin.Context) {
 	var input dto.ArticleDeleteInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, err.Error())
+		c.Abort()
 		return
 	}
 
@@ -23,6 +24,7 @@ func (ac *Controller) BatchDelete(c *gin.Context) {
 	rowsAffected, err := ac.repos.Article.BatchDelete(input.Ids, currentUserId)
 	if err != nil {
 		response.FailServer(c, "批量删除文章失败")
+		c.Abort()
 		return
 	}
 

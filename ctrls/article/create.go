@@ -19,6 +19,7 @@ func (ac *Controller) Create(c *gin.Context) {
 		// 如果前端传参不合法（比如 title 没传，或者 status 传了 3）
 		// 这里会直接拦截，并返回具体的错误原因
 		response.FailClient(c, "参数校验失败", err.Error())
+		c.Abort()
 		return
 	}
 
@@ -29,10 +30,12 @@ func (ac *Controller) Create(c *gin.Context) {
 	exists, err := ac.repos.Article.ArticleTitleExists(input.Title, 0)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，查重失败")
+		c.Abort()
 		return
 	}
 	if exists {
 		response.FailClient(c, "文章标题「%s」已存在，请更换", input.Title)
+		c.Abort()
 		return
 	}
 
@@ -53,6 +56,8 @@ func (ac *Controller) Create(c *gin.Context) {
 	articleId, err := ac.repos.Article.Add(article)
 	if err != nil {
 		response.FailClient(c, "保存文章失败", err.Error())
+		c.Abort()
+		return
 	}
 	response.OkMsg(c, "文章保存成功，article_id: "+utils.AnyToString(articleId))
 }
