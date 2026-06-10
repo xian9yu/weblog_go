@@ -9,15 +9,16 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 // InitMySQL 初始化sql
 func InitMySQL(dsn string) *gorm.DB {
 	client, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		//NamingStrategy: schema.NamingStrategy{
-		// TablePrefix:   "db_", // 表名前缀，`User` 的表名应该是 `db_users`
-		//	SingularTable: true, // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `we_user`
-		//},
+		NamingStrategy: schema.NamingStrategy{
+			// TablePrefix:   "db_", // 表名前缀，`User` 的表名应该是 `db_users`
+			SingularTable: true, // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
+		},
 		Logger: logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 			logger.Config{
