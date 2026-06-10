@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SignOut 退出
-func (ac *Controller) SignOut(c *gin.Context) {
+// Logout 退出
+func (ac *Controller) Logout(c *gin.Context) {
 	// 调用公共函数，把当前 Token 一键送进小黑屋
 	utils.Blacklist.BlockCurrentToken(c)
 

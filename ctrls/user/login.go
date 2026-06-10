@@ -14,8 +14,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// SignIn 登录
-func (ac *Controller) SignIn(c *gin.Context) {
+// Login 登录
+func (ac *Controller) Login(c *gin.Context) {
 	var input dto.UserLoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数校验失败")

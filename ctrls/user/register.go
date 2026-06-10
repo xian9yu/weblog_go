@@ -11,8 +11,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// SignUp 注册
-func (ac *Controller) SignUp(c *gin.Context) {
+// Register 注册
+func (ac *Controller) Register(c *gin.Context) {
 	var input dto.UserRegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "参数校验失败")

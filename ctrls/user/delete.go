@@ -8,11 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Unregister 自主注销账号
-// 路由注册：POST /api/v1/admin/user/unregister （必须挂载在 JWT 中建件后面）
-func (ac *Controller) Unregister(c *gin.Context) {
-	currentUserId, _ := c.Get("userId")
-	uid, _ := currentUserId.(uint64)
+// DeleteAccount 自主注销账号
+// 路由注册：POST /api/v1/admin/user/delete （必须挂载在 JWT 中建件后面）
+func (ac *Controller) DeleteAccount(c *gin.Context) {
+	currentUserId := c.GetUint64("userId")
+	// 如果是唯一的超级管理员，拒绝自残行为！
+	if currentUserId == 1 {
+		response.FailClient(c, "为了系统安全，主管理员账号禁止被删除！")
+		return
+	}
 
 	var input dto.UserUnregisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -21,7 +25,7 @@ func (ac *Controller) Unregister(c *gin.Context) {
 	}
 
 	// 调用 Repo 层进行注销
-	success, err := ac.userRepo.UnregisterSelf(uid, input.Password)
+	success, err := ac.userRepo.DeleteAccount(currentUserId, input.Password)
 	if err != nil {
 		response.FailServer(c, "注销失败")
 		return

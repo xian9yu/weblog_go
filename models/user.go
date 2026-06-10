@@ -111,8 +111,8 @@ func (repo *UserRepository) Delete(userId uint64) int64 {
 	return repo.db.Delete(&User{}, userId).RowsAffected
 }
 
-// UnregisterSelf 用户自主注销（验密后软删除）
-func (repo *UserRepository) UnregisterSelf(userId uint64, password string) (bool, error) {
+// DeleteAccount 用户自主注销（验密后软删除）
+func (repo *UserRepository) DeleteAccount(userId uint64, password string) (bool, error) {
 	var user User
 	if err := repo.db.First(&user, userId).Error; err != nil {
 		return false, err
