@@ -37,6 +37,21 @@ func (repo *SystemConfigRepository) CreateConfig(config *SystemConfig) error {
 	return repo.db.Create(config).Error
 }
 
+//func (repo *SystemConfigRepository) SaveConfig(config *SystemConfig) error {
+//
+//	// 尝试找一下
+//	err := repo.db.Where("`key` = ?", config.Key).First(&config).Error
+//
+//	if errors.Is(err, gorm.ErrRecordNotFound) {
+//		newConfig := SystemConfig{Key: config.Key, Value: config.Value}
+//		return repo.db.Create(&newConfig).Error
+//	} else if err != nil {
+//		return err
+//	}
+//
+//	return repo.db.Model(&config).Update("value", config.Value).Error
+//}
+
 // DeleteConfigs 批量删除配置项（安全版）
 func (repo *SystemConfigRepository) DeleteConfigs(ids []uint64) error {
 	// GORM 的 IN 查询会自动处理切片
@@ -142,4 +157,24 @@ func (repo *SystemConfigRepository) UpdateValueByKey(key string, value string, r
 		}).Error
 
 	return err
+}
+
+func (repo *SystemConfigRepository) GetBool(key string) (bool, error) {
+	var config SystemConfig
+	// 查询激活状态（status = 1）的指定配置项
+	err := repo.db.Where("status = 1 and `key` = ?", key).First(&config).Error
+	if err != nil {
+		// 如果是“没找到记录”
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 找不到就默认返回 true（允许冷启动注册）
+			if key == "allow_registration" {
+				return true, nil
+			}
+			return false, nil // 其他未知配置默认返回 false
+		}
+		return false, err
+	}
+
+	// 增强容错性：兼容 "true"、"1" 以及大写的 "TRUE"
+	return config.Value == "true" || config.Value == "1" || config.Value == "TRUE", nil
 }
