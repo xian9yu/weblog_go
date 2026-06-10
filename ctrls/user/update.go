@@ -28,7 +28,7 @@ func (ac *Controller) UpdateProfile(c *gin.Context) {
 	}
 
 	// 调用 Repo 执行更新
-	rowsAffected, err := ac.userRepo.UpdateProfile(currentUserId.(uint64), userData)
+	rowsAffected, err := ac.repos.User.UpdateProfile(currentUserId.(uint64), userData)
 	if err != nil {
 		response.FailServer(c, "修改资料失败")
 		return
@@ -55,7 +55,7 @@ func (ac *Controller) UpdatePassword(c *gin.Context) {
 	}
 
 	// 调用 Repo 层高内聚的方法
-	ok, err := ac.userRepo.UpdatePassword(uid, input.OldPassword, input.NewPassword)
+	ok, err := ac.repos.User.UpdatePassword(uid, input.OldPassword, input.NewPassword)
 	if err != nil {
 		response.FailServer(c, "修改密码系统故障")
 		return
@@ -96,7 +96,7 @@ func (ac *Controller) AdminResetUserPassword(c *gin.Context) {
 	}
 
 	// 调用 Repo 层的强制更新功能
-	err := ac.userRepo.ForceUpdatePassword(input.TargetUserId, input.NewPassword)
+	err := ac.repos.User.ForceUpdatePassword(input.TargetUserId, input.NewPassword)
 	if err != nil {
 		response.FailServer(c, "重置密码失败，数据库写入异常")
 		return

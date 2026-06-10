@@ -34,7 +34,7 @@ func (ac *Controller) List(c *gin.Context) {
 	}
 
 	// 3. ✨ 优雅调用：交由 Repo 仓储层去处理繁琐的数据库分页
-	total, list, err := ac.userRepo.GetList(input)
+	total, list, err := ac.repos.User.GetList(input)
 	if err != nil {
 		response.FailServer(c, "获取用户列表失败")
 		return

@@ -23,7 +23,7 @@ func (ac *Controller) Login(c *gin.Context) {
 	}
 
 	// 获取用户信息
-	user, err := ac.userRepo.LoginByEmail(input.Email)
+	user, err := ac.repos.User.LoginByEmail(input.Email)
 	if err != nil {
 		// 为了防止黑客暴力破解，无论“用户不存在”还是“密码错误”，统一返回模糊的提示
 		if errors.Is(err, gorm.ErrRecordNotFound) {

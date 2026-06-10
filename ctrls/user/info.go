@@ -20,7 +20,7 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.userRepo.GetGetUserInfoById(input.ID)
+	user, err := ac.repos.User.GetGetUserInfoById(input.ID)
 	if err != nil {
 		// 精准拦截 GORM 的查无此人错误
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -43,7 +43,7 @@ func (ac *Controller) GetInfoByEmail(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.userRepo.GetGetUserInfoByEmail(input.Email)
+	user, err := ac.repos.User.GetGetUserInfoByEmail(input.Email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.FailClient(c, "该邮箱对应的用户不存在")

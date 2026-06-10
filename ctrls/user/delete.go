@@ -27,7 +27,7 @@ func (ac *Controller) DeleteAccount(c *gin.Context) {
 	fmt.Println(input, currentUserId)
 
 	// 调用 Repo 层进行注销
-	success, err := ac.userRepo.DeleteAccount(currentUserId, input.Password)
+	success, err := ac.repos.User.DeleteAccount(currentUserId, input.Password)
 	if err != nil {
 		response.FailServer(c, "注销失败，系统繁忙")
 		return

@@ -6,16 +6,29 @@ import (
 	"gorm.io/gorm"
 )
 
+//	type Controller struct {
+//		//articleRepo *models.ArticleRepository
+//		baseDB           *gorm.DB
+//		userRepo         *models.UserRepository
+//		systemConfigRepo *models.SystemConfigRepository
+//	}
+//
+//	func NewController(scr *models.SystemConfigRepository, ur *models.UserRepository, db *gorm.DB) *Controller {
+//		return &Controller{
+//			//articleRepo: repo,
+//			baseDB:           db,
+//			userRepo:         ur,
+//			systemConfigRepo: scr,
+//		}
+//	}
 type Controller struct {
-	//articleRepo *models.ArticleRepository
-	baseDB   *gorm.DB
-	userRepo *models.UserRepository
+	baseDB *gorm.DB
+	repos  *models.Repositories
 }
 
-func NewController(repo *models.ArticleRepository, ur *models.UserRepository, db *gorm.DB) *Controller {
+func NewController(repos *models.Repositories) *Controller {
 	return &Controller{
-		//articleRepo: repo,
-		baseDB:   db,
-		userRepo: ur,
+		baseDB: repos.Database, // 或者是原生的 db
+		repos:  repos,
 	}
 }
