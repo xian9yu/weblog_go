@@ -24,8 +24,8 @@ func InitBlogRoutes(r *gin.Engine, ac *ctrls.Controllers) {
 		// ================= 🔑 认证/登录接口 =================
 		// 🌟 登录绝对不能加 JWT 拦截器，否则没人能登录成功！
 		// 登录成功后，后端会吐出一个 Token 给前端保存
-		blogGroup.POST("/login", ac.User.Login)
-		blogGroup.POST("/register", ac.User.Register) // 注册新账号
+		blogGroup.POST("/user/login", ac.User.Login)
+		blogGroup.POST("/user/register", ac.User.Register) // 注册新账号
 	}
 }
 
@@ -50,8 +50,9 @@ func InitAdminRoutes(r *gin.Engine, ac *ctrls.Controllers) {
 		// ================= 👤 个人中心/密码管理 =================
 
 		adminGroup.GET("/user/info", ac.User.GetInfoById) // 管理员登录后台后，获取自己的基本信息（如：头像、昵称）
+		adminGroup.GET("/user/list", ac.User.List)        // 管理员登录后台后，获取自己的基本信息（如：头像、昵称）
 		adminGroup.PUT("/user/password", ac.User.UpdatePassword)
-		adminGroup.POST("/logout", ac.User.Logout) // 退出登录 解析出 Token 里的用户 ID 并将其拉黑或让其失效
+		adminGroup.POST("/user/logout", ac.User.Logout) // 退出登录 解析出 Token 里的用户 ID 并将其拉黑或让其失效
 		adminGroup.DELETE("/user", ac.User.DeleteAccount)
 	}
 }

@@ -18,8 +18,8 @@ func (ac *Controller) List(c *gin.Context) {
 
 	//使用 DTO 一键绑定并过滤 Query 参数
 	var input dto.UserListInput
-	if err := c.ShouldBindQuery(&input); err != nil {
-		response.FailClient(c, "请求参数格式错误")
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.FailClient(c, "参数校验失败: "+err.Error())
 		return
 	}
 

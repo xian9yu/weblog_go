@@ -63,3 +63,7 @@ func AnyToInt64(value any) int64 {
 func AnyToInt(value any) int {
 	return int(AnyToInt64(value))
 }
+
+func AnyToUint64(value any) uint64 {
+	return uint64(AnyToInt64(value))
+}

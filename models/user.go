@@ -10,12 +10,12 @@ import (
 
 type User struct {
 	ID        uint64         `json:"id" gorm:"size:12;primaryKey;unique;notnull;comment:用户id"`
-	Name      string         `json:"name" gorm:"size:60;comment:用户名"`
+	Name      string         `json:"name" gorm:"type:varchar(100);not null;comment:用户名"`
 	Email     string         `json:"email" gorm:"type:varchar(100);not null;uniqueIndex:idx_email_deleted;comment:邮箱"`
-	Password  string         `json:"-"  gorm:"size:33;notnull;comment:登录密码"`
-	Group     string         `json:"group" gorm:"size:9;notnull;comment:用户分组(管理员;用户)"`
-	Status    int8           `json:"status" gorm:"size:1;notnull;comment:允许登录(1启用;2关闭)"`
-	CreatedAt time.Time      `json:"created_at" gorm:"autoCreateTime;notnull;comment:user创建时间"`
+	Password  string         `json:"-"  gorm:"type:varchar(255);not null;comment:登录密码"`
+	Group     string         `json:"group" gorm:"size:9;not null;comment:用户分组(管理员;用户)"`
+	Status    int8           `json:"status" gorm:"default:1;size:1;not null;comment:允许登录(1启用;2关闭)"`
+	CreatedAt time.Time      `json:"created_at" gorm:"autoCreateTime;not null;comment:user创建时间"`
 	UpdatedAt time.Time      `json:"updated_at" gorm:"autoUpdateTime;comment:上一次修改信息时间"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"uniqueIndex:idx_email_deleted;precision:3"`
 }
@@ -107,9 +107,9 @@ func (repo *UserRepository) ForceUpdatePassword(targetUserId uint64, newPwd stri
 }
 
 // Delete 删除
-func (repo *UserRepository) Delete(userId uint64) int64 {
-	return repo.db.Delete(&User{}, userId).RowsAffected
-}
+//func (repo *UserRepository) Delete(userId uint64) int64 {
+//	return repo.db.Delete(&User{}, userId).RowsAffected
+//}
 
 // DeleteAccount 用户自主注销（验密后软删除）
 func (repo *UserRepository) DeleteAccount(userId uint64, password string) (bool, error) {
@@ -204,4 +204,11 @@ func (repo *UserRepository) GetList(in dto.UserListInput) (total int64, list []U
 	err = tx.Limit(in.PageSize).Offset(offset).Find(&list).Error
 
 	return total, list, err
+}
+
+// CountUser 获取用户总数
+func (repo *UserRepository) CountUser() (int64, error) {
+	var count int64
+	err := repo.db.Model(&User{}).Count(&count).Error
+	return count, err
 }

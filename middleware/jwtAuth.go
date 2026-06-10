@@ -72,7 +72,7 @@ func JWTAuth() gin.HandlerFunc {
 		}
 
 		// 将解析出来的用户信息塞进 Gin 的上下文 Context 里
-		c.Set("user_id", claims.UserId)
+		c.Set("user_id", utils.AnyToUint64(claims.UserId))
 		c.Set("name", claims.UserName)
 		c.Set("email", claims.UserEmail)
 		c.Set("group", claims.UserGroup)

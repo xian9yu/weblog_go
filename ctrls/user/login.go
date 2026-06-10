@@ -30,7 +30,7 @@ func (ac *Controller) Login(c *gin.Context) {
 			response.FailClient(c, "账号或密码错误")
 			return
 		}
-		response.FailServer(c, "系统繁忙，登录失败")
+		response.FailServer(c, "系统繁忙，登录失败: "+err.Error())
 		return
 	}
 

@@ -15,7 +15,7 @@ import (
 func (ac *Controller) Register(c *gin.Context) {
 	var input dto.UserRegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.FailClient(c, "参数校验失败")
+		response.FailClient(c, "参数校验失败: "+err.Error())
 		return
 	}
 
@@ -50,11 +50,27 @@ func (ac *Controller) Register(c *gin.Context) {
 		return
 	}
 
+	// 在插入前，先查一下当前系统里有没有用户
+	userCount, err := ac.userRepo.CountUser()
+	if err != nil {
+		response.FailServer(c, "系统繁忙，读取配置失败")
+		return
+	}
+
+	// 如果用户数为 0，说明这个人就是未来的 ID 1，给 admin 权限
+	groupName := ""
+	if userCount == 0 {
+		groupName = "admin"
+	} else {
+		groupName = "user"
+	}
+
 	nowTime := time.Now()
 	newUser := models.User{
 		Password:  string(hashedPassword), // 存入密文
 		Name:      input.Name,
 		Email:     input.Email,
+		Group:     groupName,
 		Status:    1, // 默认允许登录
 		CreatedAt: nowTime,
 		UpdatedAt: nowTime,

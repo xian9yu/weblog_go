@@ -15,8 +15,8 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 
 	// 针对 uri:"id" 标签，必须使用 ShouldBindUri 一键绑定和格式化
 	// 路由定义如：r.GET("/api/v1/admin/user/:id", ac.GetUserInfo)
-	if err := c.ShouldBindUri(&input); err != nil {
-		response.FailClient(c, "用户ID格式不正确")
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.FailClient(c, "用户ID格式不正确:"+err.Error())
 		return
 	}
 
@@ -38,7 +38,7 @@ func (ac *Controller) GetInfoById(c *gin.Context) {
 func (ac *Controller) GetInfoByEmail(c *gin.Context) {
 	var input dto.UserInfoInput
 	// 绑定路径中的 :email（Gin 会自动进行 URL 解码，将 %40 还原为 @）
-	if err := c.ShouldBindUri(&input); err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "邮箱格式不正确")
 		return
 	}

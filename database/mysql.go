@@ -36,6 +36,7 @@ func InitMySQL(dsn string) *gorm.DB {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(50)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetConnMaxIdleTime(20 * time.Minute) // 设置最大闲置连接存活时间
 
 	// 自动同步数据库结构
 	if err = client.AutoMigrate(

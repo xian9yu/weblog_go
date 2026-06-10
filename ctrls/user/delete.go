@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"weblog/dto"
 	"weblog/utils"
 	"weblog/utils/response"
@@ -11,7 +12,7 @@ import (
 // DeleteAccount 自主注销账号
 // 路由注册：POST /api/v1/admin/user/delete （必须挂载在 JWT 中建件后面）
 func (ac *Controller) DeleteAccount(c *gin.Context) {
-	currentUserId := c.GetUint64("userId")
+	currentUserId := c.GetUint64("user_id")
 	// 如果是唯一的超级管理员，拒绝自残行为！
 	if currentUserId == 1 {
 		response.FailClient(c, "为了系统安全，主管理员账号禁止被删除！")
@@ -23,11 +24,12 @@ func (ac *Controller) DeleteAccount(c *gin.Context) {
 		response.FailClient(c, err.Error())
 		return
 	}
+	fmt.Println(input, currentUserId)
 
 	// 调用 Repo 层进行注销
 	success, err := ac.userRepo.DeleteAccount(currentUserId, input.Password)
 	if err != nil {
-		response.FailServer(c, "注销失败")
+		response.FailServer(c, "注销失败，系统繁忙")
 		return
 	}
 	if !success {
