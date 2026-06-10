@@ -28,7 +28,7 @@ func (ac *Controller) GuestList(c *gin.Context) {
 		input.PageSize = 10
 	}
 
-	total, list, err := ac.articleRepo.GetList(input, 0)
+	total, list, err := ac.repos.Article.GetList(input, 0)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，获取文章列表失败")
 		return
@@ -67,7 +67,7 @@ func (ac *Controller) AdminList(c *gin.Context) {
 		return
 	}
 
-	total, list, err := ac.articleRepo.GetList(input, currentUserId.(uint64))
+	total, list, err := ac.repos.Article.GetList(input, currentUserId.(uint64))
 	if err != nil {
 		response.FailServer(c, "系统繁忙，获取文章列表失败")
 		return

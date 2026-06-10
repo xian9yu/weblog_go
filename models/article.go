@@ -175,7 +175,7 @@ func (repo *ArticleRepository) ArticleTitleExists(title string, excludeId uint64
 // GetArticleInfosById 通过 id 获取详情
 func (repo *ArticleRepository) GetArticleInfosById(articleId uint64) (*Article, error) {
 	var article Article
-	err := repo.db.Where("allow_view = ? and id = ?", "y", articleId).Find(&article).Error
+	err := repo.db.Where("status = 1 and id = ?", articleId).Find(&article).Error
 	return &article, err
 }
 

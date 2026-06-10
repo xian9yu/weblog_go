@@ -17,11 +17,10 @@ func (ac *Controller) BatchDelete(c *gin.Context) {
 		return
 	}
 
-	// 从 Context 中获取当前登录后台的作者 ID（假设你登录中间件存了 ctxUserKey）
-	currentUserId := c.GetUint64("userId")
+	currentUserId := c.GetUint64("user_id")
 
 	// 调用 Repo 执行安全删除
-	rowsAffected, err := ac.articleRepo.BatchDelete(input.Ids, currentUserId)
+	rowsAffected, err := ac.repos.Article.BatchDelete(input.Ids, currentUserId)
 	if err != nil {
 		response.FailServer(c, "批量删除文章失败")
 		return

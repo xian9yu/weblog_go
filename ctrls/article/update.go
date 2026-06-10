@@ -13,13 +13,13 @@ import (
 
 func (ac *Controller) Update(c *gin.Context) {
 	var input dto.ArticleUpdateInput
-	if err := c.ShouldBindQuery(&input); err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		response.FailClient(c, "文章更新参数格式不正确")
 		return
 	}
 
 	input.Title = strings.TrimSpace(input.Title)
-	exists, err := ac.articleRepo.ArticleTitleExists(input.Title, input.ID)
+	exists, err := ac.repos.Article.ArticleTitleExists(input.Title, input.ID)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，标题校验失败")
 		return
@@ -36,7 +36,7 @@ func (ac *Controller) Update(c *gin.Context) {
 	// 先修剪首尾空格
 	if group != "admin" {
 		// 获取 authorId
-		authorId, err := ac.articleRepo.GetArticleUserIdById(input.ID)
+		authorId, err := ac.repos.Article.GetArticleUserIdById(input.ID)
 		if err != nil {
 			// 如果是 GORM 没查到记录，通常会报 ErrRecordNotFound
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -59,7 +59,7 @@ func (ac *Controller) Update(c *gin.Context) {
 		"status":     input.Status,
 		"updated_at": time.Now(),
 	}
-	rows, err := ac.articleRepo.Update(input.ID, updateMap)
+	rows, err := ac.repos.Article.Update(input.ID, updateMap)
 	if err != nil {
 		response.FailServer(c, "系统繁忙，文章更新失败")
 		return
