@@ -47,8 +47,7 @@ func (ac *Controller) UpdateProfile(c *gin.Context) {
 // UpdatePassword 修改密码接口
 // 路由：PUT /api/v1/admin/user/password
 func (ac *Controller) UpdatePassword(c *gin.Context) {
-	currentUserId, _ := c.Get("user_id")
-	uid, _ := currentUserId.(uint64)
+	currentUserId := c.GetUint64("user_id")
 
 	var input dto.UserUpdatePasswordInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -58,9 +57,9 @@ func (ac *Controller) UpdatePassword(c *gin.Context) {
 	}
 
 	// 调用 Repo 层高内聚的方法
-	ok, err := ac.repos.User.UpdatePassword(uid, input.OldPassword, input.NewPassword)
+	ok, err := ac.repos.User.UpdatePassword(currentUserId, input.OldPassword, input.NewPassword)
 	if err != nil {
-		response.FailServer(c, "修改密码系统故障")
+		response.FailServer(c, "修改密码系统故障: "+err.Error())
 		c.Abort()
 		return
 	}

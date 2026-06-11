@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 	"weblog/dto"
 
@@ -73,6 +74,13 @@ func (repo *UserRepository) UpdatePassword(userId uint64, oldPwd, newPwd string)
 	if err != nil {
 		// 旧密码对不上，返回 false，代表校验失败
 		return false, nil
+	}
+
+	// 判断新旧密码是否完全相同
+	// 利用 bcrypt 比较：新密码明文 vs 数据库里的旧密码密文
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(newPwd)); err == nil {
+		// 如果 err 为 nil，说明虽然是修改，但新密码跟数据库里存的一模一样
+		return false, errors.New("新密码不能与原密码相同")
 	}
 
 	// 生成新密码的哈希密文
