@@ -13,11 +13,9 @@ func (ac *Controller) GuestList(c *gin.Context) {
 
 	var input dto.ArticlePageQueryInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		if err := c.ShouldBindJSON(&input); err != nil {
-			response.FailClient(c, "参数解析失败: %v", err)
-			c.Abort()
-			return
-		}
+		response.FailClient(c, "参数解析失败: %v", err)
+		c.Abort()
+		return
 	}
 	// 如果前端没传 page_no，或者传了 0，默认第 1 页
 	if input.PageNo <= 0 {
@@ -47,11 +45,9 @@ func (ac *Controller) GuestList(c *gin.Context) {
 func (ac *Controller) AdminList(c *gin.Context) {
 	var input dto.ArticlePageQueryInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		if err := c.ShouldBindJSON(&input); err != nil {
-			response.FailClient(c, "参数解析失败: %v", err)
-			c.Abort()
-			return
-		}
+		response.FailClient(c, "参数解析失败: %v", err)
+		c.Abort()
+		return
 	}
 
 	// 如果前端没传 page_no，或者传了 0，默认第 1 页
@@ -64,7 +60,7 @@ func (ac *Controller) AdminList(c *gin.Context) {
 		input.PageSize = 10
 	}
 
-	currentUserId, exists := c.Get("userId")
+	currentUserId, exists := c.Get("user_id")
 	if !exists {
 		response.FailUnauthorized(c, "登录已失效，请重新登录")
 		c.Abort()
