@@ -5,6 +5,7 @@ import (
 	"time"
 	"weblog/ctrls"
 	"weblog/database"
+	"weblog/middleware"
 	"weblog/models"
 	"weblog/router"
 	"weblog/utils"
@@ -14,9 +15,9 @@ import (
 
 func initRouter(ac *ctrls.Controllers, r *gin.Engine) *gin.Engine {
 	//  挂载全局标准中间件
-	r.Use(gin.Logger())   // 打印请求日志
-	r.Use(gin.Recovery()) // 崩溃恢复，防止 panic 导致进程挂掉
-	// r.Use(middleware.Cors()) // 如果有跨域需求，可以在这里挂载跨域中间件
+	r.Use(gin.Logger())      // 打印请求日志
+	r.Use(gin.Recovery())    // 崩溃恢复，防止 panic 导致进程挂掉
+	r.Use(middleware.Cors()) // 如果有跨域需求，可以在这里挂载跨域中间件
 	// 限制上传文件大小
 	// 为 multipart forms 设置较低的内存限制 (默认是 32 MiB)
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
