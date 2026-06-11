@@ -20,16 +20,16 @@ type ArticleUpdateInput struct {
 
 // ArticlePageQueryInput 文章分页列表查询参数校验
 type ArticlePageQueryInput struct {
-	PageNo       int    `form:"page_no" binding:"omitempty,min=1"`          // min=1：页码必须大于等于 1
-	PageSize     int    `form:"page_size" binding:"omitempty,min=1,max=50"` // max=50：限制单页最大返回 50 条，防止前端恶意传入 size=10000 导致数据库宕机
-	CategoryName string `form:"category_name" binding:"omitempty"`          // 分类筛选是可选的
-	OrderBy      string `form:"order_by" binding:"omitempty"`               // 排序
-	State        *int8  `form:"state" binding:"omitempty,oneof=1 2"`        // 筛选状态，选填。用指针是为了能区分前端传的是 0 还是没传
+	PageNo       int    `json:"page_no" binding:"omitempty,min=1"`          // min=1：页码必须大于等于 1
+	PageSize     int    `json:"page_size" binding:"omitempty,min=1,max=50"` // max=50：限制单页最大返回 50 条，防止前端恶意传入 size=10000 导致数据库宕机
+	CategoryName string `json:"category_name" binding:"omitempty"`          // 分类筛选是可选的
+	OrderBy      string `json:"order_by" binding:"omitempty"`               // 排序
+	State        *int8  `json:"state" binding:"omitempty,oneof=1 2"`        // 筛选状态，选填。用指针是为了能区分前端传的是 0 还是没传
 }
 
 // ArticleInfoInput 获取文章详情的请求入参
 type ArticleInfoInput struct {
-	ID uint64 `form:"id" uri:"id" binding:"required,gt=0"`
+	ID uint64 `json:"id" binding:"required,gt=0"`
 }
 
 // ArticleDeleteInput 删除文章的请求入参

@@ -14,7 +14,7 @@ type ConfigCreateInput struct {
 // 适用于路由：GET /api/v1/admin/config/:key (路径参数版)
 type ConfigGetByKeyInput struct {
 	// 绑定路径中的 :key，强校验不能为空，且限制长度防止恶意注入
-	Key string `uri:"key" binding:"required,max=60" label:"配置键名"`
+	Key string `json:"key" binding:"required,max=60" label:"配置键名"`
 }
 
 // ConfigBatchGetByKeysInput 批量获取配置项入参
@@ -29,7 +29,7 @@ type ConfigBatchOutput map[string]string
 // ConfigGetByIdInput 通过ID查询配置的入参
 // 路由：GET /api/v1/admin/config/:id
 type ConfigGetByIdInput struct {
-	ID uint64 `uri:"id" binding:"required,gt=0" label:"配置ID"`
+	ID uint64 `json:"id" binding:"required,gt=0" label:"配置ID"`
 }
 
 // ConfigUpdateInput 修改配置项的入参
@@ -44,10 +44,10 @@ type ConfigUpdateInput struct {
 // ConfigListInput 获取配置项列表的入参（查询参数）
 // 适用于路由：GET /api/v1/admin/config
 type ConfigListInput struct {
-	PageNo   int `form:"page_no" binding:"omitempty,min=1"` // min=1：页码必须大于等于 1
-	PageSize int `form:"page_size" binding:"omitempty,min=1,max=50"`
+	PageNo   int `json:"page_no" binding:"omitempty,min=1"` // min=1：页码必须大于等于 1
+	PageSize int `json:"page_size" binding:"omitempty,min=1,max=50"`
 	// Keyword 模糊搜索关键字（可以支持按 key 或 remark 搜索），非必填
-	Keyword string `form:"keyword" binding:"max=50" label:"搜索关键字"`
+	Keyword string `json:"keyword" binding:"max=50" label:"搜索关键字"`
 }
 
 // ConfigDeleteInput 删除系统配置项入参
